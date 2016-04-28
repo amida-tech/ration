@@ -61,6 +61,11 @@ passport.use(new GoogleStrategy({
   callbackURL: '/auth/google/callback',
   passReqToCallback: true
 }, function(req, accessToken, refreshToken, profile, done) {
+  // Check for allowed domain
+  if (profile._json.domain !== process.env.GOOGLE_DOMAIN) {
+      req.flash('errors', { msg: 'Invalid host domain' });
+      return done();
+  }
   if (req.user) {
     User.findOne({ google: profile.id }, function(err, existingUser) {
       if (existingUser) {
