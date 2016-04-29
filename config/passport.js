@@ -8,6 +8,7 @@ var OAuthStrategy = require('passport-oauth').OAuthStrategy;
 var OAuth2Strategy = require('passport-oauth').OAuth2Strategy;
 
 var User = require('../models/User');
+var Hours = require('../models/Hours');
 
 passport.serializeUser(function(user, done) {
   done(null, user.id);
@@ -55,6 +56,7 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, function(email, passw
 /**
  * Sign in with Google.
  */
+// TODO simplify this function for a google-only use case
 passport.use(new GoogleStrategy({
   clientID: process.env.GOOGLE_ID,
   clientSecret: process.env.GOOGLE_SECRET,
@@ -102,8 +104,13 @@ passport.use(new GoogleStrategy({
           user.profile.name = profile.displayName;
           user.profile.gender = profile._json.gender;
           user.profile.picture = profile._json.image.url;
-          user.save(function(err) {
-            done(err, user);
+          user.save(function(err, newUser) {
+            // Create an Hours document for a new Google user
+            var hours = new Hours();
+            hours.userId = newUser._id;
+            hours.save(function(err) {
+              done(err, user);
+            });
           });
         }
       });

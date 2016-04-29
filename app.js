@@ -31,6 +31,7 @@ dotenv.load();
  */
 var homeController = require('./controllers/home');
 var userController = require('./controllers/user');
+var hoursController = require('./controllers/hours');
 var apiController = require('./controllers/api');
 var contactController = require('./controllers/contact');
 
@@ -123,6 +124,11 @@ app.post('/account/profile', passportConfig.isAuthenticated, userController.post
 app.post('/account/password', passportConfig.isAuthenticated, userController.postUpdatePassword);
 app.post('/account/delete', passportConfig.isAuthenticated, userController.postDeleteAccount);
 app.get('/account/unlink/:provider', passportConfig.isAuthenticated, userController.getOauthUnlink);
+app.get('/hours', hoursController.dashboard);
+
+app.get('/api/hours', hoursController.getAllHours);
+app.get('/api/hours/me', hoursController.getHours);
+app.put('/api/hours/me', hoursController.putHours);
 
 /**
  * API examples routes.
