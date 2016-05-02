@@ -1,0 +1,19 @@
+extends ../layout
+
+block content
+  h2 My Hours
+  hr
+  
+  div.container
+    div.content
+      table.table.table-bordered
+        thead
+          tr
+            th Project
+            th Hours per week
+        tbody
+          tr
+            td
+              input(type="text" name='name0'  placeholder='Medecision' class="form-control")
+            td
+              input(type="text" name='name0'  placeholder='40' class="form-control")

@@ -124,8 +124,12 @@ app.post('/account/profile', passportConfig.isAuthenticated, userController.post
 app.post('/account/password', passportConfig.isAuthenticated, userController.postUpdatePassword);
 app.post('/account/delete', passportConfig.isAuthenticated, userController.postDeleteAccount);
 app.get('/account/unlink/:provider', passportConfig.isAuthenticated, userController.getOauthUnlink);
-app.get('/hours', hoursController.dashboard);
+app.get('/dashboard', hoursController.dashboard);
+app.get('/myhours', hoursController.myhours);
 
+/**
+ * API for user project hours.
+ */
 app.get('/api/hours', hoursController.getAllHours);
 app.get('/api/hours/me', hoursController.getHours);
 app.put('/api/hours/me', hoursController.putHours);

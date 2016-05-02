@@ -5,12 +5,22 @@ var User = require('../models/User');
 var Hours = require('../models/Hours');
 
 /**
- * GET /hours
+ * GET /dashboard
  * Hours dashboard.
  */
 exports.dashboard = function(req, res) {
   res.render('hours/dashboard', {
-    title: 'Hours'
+    title: 'Dashboard'
+  });
+};
+
+/**
+ * GET /myhours
+ * Edit current user hours.
+ */
+exports.myhours = function(req, res) {
+  res.render('hours/myhours', {
+    title: 'My Hours'
   });
 };
 
