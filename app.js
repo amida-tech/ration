@@ -82,13 +82,6 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
-app.use(function(req, res, next) {
-  if (req.path === '/api/upload') {
-    next();
-  } else {
-    lusca.csrf()(req, res, next);
-  }
-});
 app.use(lusca.xframe('SAMEORIGIN'));
 app.use(lusca.xssProtection(true));
 app.use(function(req, res, next) {
@@ -125,7 +118,7 @@ app.post('/account/password', passportConfig.isAuthenticated, userController.pos
 app.post('/account/delete', passportConfig.isAuthenticated, userController.postDeleteAccount);
 app.get('/account/unlink/:provider', passportConfig.isAuthenticated, userController.getOauthUnlink);
 app.get('/dashboard', passportConfig.isAuthenticated, hoursController.dashboard);
-app.get('/myhours', passportConfig.isAuthenticated, hoursController.myhours);
+app.get('/myhours', passportConfig.isAuthenticated, hoursController.myHours);
 
 /**
  * API for user project hours.

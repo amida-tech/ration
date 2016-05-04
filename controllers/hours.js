@@ -18,10 +18,16 @@ exports.dashboard = function(req, res) {
  * GET /myhours
  * Edit current user hours.
  */
-exports.myhours = function(req, res) {
-  res.render('hours/myhours', {
-    title: 'My Hours'
-  });
+exports.myHours = function(req, res, next) {
+  Hours.findOne({userId: req.user.id}, function(err, doc) {
+        if (err) {
+            return next(err);
+        }
+        res.render('hours/myhours', {
+            title: 'My Hours',
+            hours: doc
+        });
+    });
 };
 
 /**
@@ -56,15 +62,7 @@ exports.getHours = function(req, res, next) {
  * PUT /api/hours/me
  * Update an hours entry for a user.
  */
-exports.putHours = function(req, res, next) {
-    req.assert('hours', 'Request body must have an hours object').notEmpty();
-    
-    var errors = req.validationErrors();
-    
-    if (errors) {
-        return next(errors);
-    }
-    
+exports.putHours = function(req, res, next) {  
     Hours.findOne({userId: req.user.id}, function(err, doc) {
         if (err) {
             return next(err);
