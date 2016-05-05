@@ -29,11 +29,8 @@ dotenv.load();
 /**
  * Controllers (route handlers).
  */
-var homeController = require('./controllers/home');
 var userController = require('./controllers/user');
 var hoursController = require('./controllers/hours');
-var apiController = require('./controllers/api');
-var contactController = require('./controllers/contact');
 
 /**
  * API keys and Passport configuration.
@@ -100,7 +97,7 @@ app.use(express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }))
 /**
  * Primary app routes.
  */
-app.get('/', passportConfig.isAuthenticated, homeController.index);
+app.get('/', passportConfig.isAuthenticated, hoursController.dashboard);
 app.get('/login', userController.getLogin);
 app.post('/login', userController.postLogin);
 app.get('/logout', userController.logout);
@@ -110,8 +107,6 @@ app.get('/reset/:token', userController.getReset);
 app.post('/reset/:token', userController.postReset);
 app.get('/signup', userController.getSignup);
 app.post('/signup', userController.postSignup);
-app.get('/contact', contactController.getContact);
-app.post('/contact', contactController.postContact);
 app.get('/account', passportConfig.isAuthenticated, userController.getAccount);
 app.post('/account/profile', passportConfig.isAuthenticated, userController.postUpdateProfile);
 app.post('/account/password', passportConfig.isAuthenticated, userController.postUpdatePassword);
@@ -126,14 +121,6 @@ app.get('/myhours', passportConfig.isAuthenticated, hoursController.myHours);
 app.get('/api/hours', hoursController.getAllHours);
 app.get('/api/hours/me', hoursController.getHours);
 app.put('/api/hours/me', hoursController.putHours);
-
-/**
- * API examples routes.
- */
-app.get('/api', apiController.getApi);
-app.get('/api/scraping', apiController.getScraping);
-app.get('/api/upload', apiController.getFileUpload);
-app.post('/api/upload', upload.single('myFile'), apiController.postFileUpload);
 
 /**
  * OAuth authentication routes. (Sign in)
