@@ -8,10 +8,16 @@ var Hours = require('../models/Hours');
  * GET /dashboard
  * Hours dashboard.
  */
-exports.dashboard = function(req, res) {
-  res.render('hours/dashboard', {
-    title: 'Dashboard'
-  });
+exports.dashboard = function (req, res, next) {
+    Hours.find({}, function (err, docs) {
+        if (err) {
+            return next(err);
+        }
+        res.render('hours/dashboard', {
+            title: 'Dashboard',
+            hours: docs
+        });
+    })
 };
 
 /**

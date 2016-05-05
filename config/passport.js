@@ -107,7 +107,9 @@ passport.use(new GoogleStrategy({
           user.save(function(err, newUser) {
             // Create an Hours document for a new Google user
             var hours = new Hours();
+            var name = newUser.profile.name;
             hours.userId = newUser._id;
+            hours.userName = name;
             hours.save(function(err) {
               done(err, user);
             });

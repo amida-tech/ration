@@ -5,31 +5,16 @@ block content
   hr
   
   div.container
-    div.content
-      
-      h3 Jon
-      table.table.table-striped
-        thead
-          tr
-            th Project
-            th Hours per week
-    
-        tbody
-          tr
-            td DRE
-            td 20
-          tr
-            td Orange
-            td 20
-            
-      h3 Jacob
-      table.table.table-striped
-        thead
-          tr
-            th Project
-            th Hours per week
-    
-        tbody
-          tr
-            td Medecision
-            td 40
+    div.content  
+      each user in hours
+        h3= user.userName
+        table.table.table-striped
+          thead
+            tr
+              th Project
+              th Hours per week
+          tbody
+            each project in user.projects
+              tr
+                td= project.name
+                td= project.hours
