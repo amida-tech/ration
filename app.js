@@ -8,7 +8,6 @@ var bodyParser = require('body-parser');
 var logger = require('morgan');
 var errorHandler = require('errorhandler');
 var lusca = require('lusca');
-var dotenv = require('dotenv');
 var MongoStore = require('connect-mongo/es5')(session);
 var flash = require('express-flash');
 var path = require('path');
@@ -24,12 +23,9 @@ var upload = multer({ dest: path.join(__dirname, 'uploads') });
  *
  * Default path: .env (You can remove the path argument entirely, after renaming `.env.example` to `.env`)
  */
-try {
-  dotenv.load();
-} catch (error) {
-  console.error(error);
-  console.log('.env was not loaded');
-}
+if ((process.env.NODE_ENV || 'dev') === 'dev') {
+   require('dotenv').load();
+} 
 
 /**
  * Controllers (route handlers).
