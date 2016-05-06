@@ -24,7 +24,12 @@ var upload = multer({ dest: path.join(__dirname, 'uploads') });
  *
  * Default path: .env (You can remove the path argument entirely, after renaming `.env.example` to `.env`)
  */
-dotenv.load();
+try {
+  dotenv.load();
+} catch (error) {
+  console.error(error);
+  console.log('.env was not loaded');
+}
 
 /**
  * Controllers (route handlers).
