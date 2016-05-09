@@ -1,11 +1,15 @@
 dependencies:
     pre:
         - npm install -g npm
+    
+    post:
+        - rm -r ~/ration/node_modules
+
 
 machine:
     node:
         version: 5.0.0
-    
+        
     environment:
         MONGODB: mongodb://localhost:27017/ration-test
         SESSION_SECRET: Your Session Secret goes here
