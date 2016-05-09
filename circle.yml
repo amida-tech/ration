@@ -1,8 +1,7 @@
 machine:
     
     node:
-        version:
-            5.0.0
+        version: 5.0.0
     
     environment:
         MONGODB: mongodb://localhost:27017/ration-test
