@@ -8,8 +8,7 @@ var bodyParser = require('body-parser');
 var logger = require('morgan');
 var errorHandler = require('errorhandler');
 var lusca = require('lusca');
-var dotenv = require('dotenv');
-var MongoStore = require('connect-mongo/es5')(session);
+var MongoStore = require('connect-mongo')(session);
 var flash = require('express-flash');
 var path = require('path');
 var mongoose = require('mongoose');
@@ -24,7 +23,9 @@ var upload = multer({ dest: path.join(__dirname, 'uploads') });
  *
  * Default path: .env (You can remove the path argument entirely, after renaming `.env.example` to `.env`)
  */
-dotenv.load();
+if ((process.env.NODE_ENV || 'dev') === 'dev') {
+   require('dotenv').load();
+} 
 
 /**
  * Controllers (route handlers).
@@ -45,7 +46,8 @@ var app = express();
 /**
  * Connect to MongoDB.
  */
-mongoose.connect(process.env.MONGODB || process.env.MONGOLAB_URI);
+var mongoUrl = process.env.MONGOLAB_URI || process.env.MONGODB;
+mongoose.connect(mongoUrl);
 mongoose.connection.on('error', function() {
   console.log('MongoDB Connection Error. Please make sure that MongoDB is running.');
   process.exit(1);
@@ -72,7 +74,7 @@ app.use(session({
   saveUninitialized: true,
   secret: process.env.SESSION_SECRET,
   store: new MongoStore({
-    url: process.env.MONGODB || process.env.MONGOLAB_URI,
+    url: mongoUrl,
     autoReconnect: true
   })
 }));
@@ -126,7 +128,7 @@ app.put('/api/hours/me', hoursController.putHours);
  * OAuth authentication routes. (Sign in)
  */
 app.get('/auth/google', passport.authenticate('google', { scope: 'profile email' }));
-app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/login' }), function(req, res) {
+app.get(process.env.GOOGLE_CALLBACK, passport.authenticate('google', { failureRedirect: '/login' }), function(req, res) {
   res.redirect(req.session.returnTo || '/');
 });
 
