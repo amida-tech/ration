@@ -1,0 +1,37 @@
+{
+  "name": "ration",
+  "description": "Workload dashboard for organizations.",
+  "repository": "https://github.com/jsachs/ration",
+  "env": {
+    "GOOGLE_CALLBACK": {
+      "description": "Google OAuth URL callback",
+      "value": "/auth/google/callback"
+    },
+    "GOOGLE_ID": {
+      "description": "Google OAuth application ID"
+    },
+    "GOOGLE_DOMAIN": {
+      "description": "Google apps domain for your organization"
+    },
+    "GOOGLE_SECRET": {
+      "description": "Google OAuth application secret"
+    },
+    "MONGOLAB_URI": {
+      "description": "MongoDB URI for use with the MongoLab add-on"
+    },
+    "NODE_ENV": {
+      "description": "Application environment",
+      "value": "heroku"
+    },
+    "PAPERTRAIL_API_TOKEN": {
+      "description": "Token for Papertrail logging"
+    },
+    "SESSION_SECRET": {
+      "generator": "secret"
+    }
+  },
+  "addons": [
+    "mongolab:sandbox",
+    "papertrail"
+  ]
+}
