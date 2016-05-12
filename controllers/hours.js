@@ -9,7 +9,7 @@ var Hours = require('../models/Hours');
  * Hours dashboard.
  */
 exports.dashboard = function (req, res, next) {
-    Hours.find({}, function (err, docs) {
+    Hours.find({}, null, {sort: {'profile.name': 1}}, function (err, docs) {
         if (err) {
             return next(err);
         }
