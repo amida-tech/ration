@@ -16,15 +16,9 @@
     "GOOGLE_SECRET": {
       "description": "Google OAuth application secret"
     },
-    "MONGOLAB_URI": {
-      "description": "MongoDB URI for use with the MongoLab add-on"
-    },
     "NODE_ENV": {
       "description": "Application environment",
       "value": "heroku"
-    },
-    "PAPERTRAIL_API_TOKEN": {
-      "description": "Token for Papertrail logging"
     },
     "SESSION_SECRET": {
       "generator": "secret"
