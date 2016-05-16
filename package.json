@@ -7,7 +7,7 @@
   },
   "scripts": {
     "start": "nodemon app.js",
-    "test": "mocha --reporter spec --timeout 5000"
+    "test": "mocha --reporter spec --timeout 5000 --recursive"
   },
   "dependencies": {
     "async": "^2.0.0-rc.3",
