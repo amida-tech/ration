@@ -16,9 +16,11 @@ var passport = require('passport');
 var expressValidator = require('express-validator');
 var sass = require('node-sass-middleware');
 var multer = require('multer');
-var upload = multer({ dest: path.join(__dirname, 'uploads') });
+var upload = multer({
+    dest: path.join(__dirname, 'uploads')
+});
 
-module.exports = function(app) {
+module.exports = function (app) {
     /**
      * Load environment variables from .env file, where API keys and passwords are configured.
      *
@@ -27,7 +29,7 @@ module.exports = function(app) {
     if ((process.env.NODE_ENV || 'dev') === 'dev') {
         require('dotenv').load();
     }
-    
+
     /**
      * Express configuration.
      */
@@ -42,7 +44,9 @@ module.exports = function(app) {
     }));
     app.use(logger('dev'));
     app.use(bodyParser.json());
-    app.use(bodyParser.urlencoded({ extended: true }));
+    app.use(bodyParser.urlencoded({
+        extended: true
+    }));
     app.use(expressValidator());
     app.use(session({
         resave: true,
@@ -69,7 +73,9 @@ module.exports = function(app) {
         }
         next();
     });
-    app.use(express.static(path.normalize(path.join(__dirname, '../public')), { maxAge: 31557600000 }));
+    app.use(express.static(path.normalize(path.join(__dirname, '../public')), {
+        maxAge: 31557600000
+    }));
 
     /**
      * Error Handler.

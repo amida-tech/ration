@@ -10,8 +10,8 @@ var hoursController = require('./controllers/hours');
 var passport = require('passport');
 var passportConfig = require('./config/passport');
 
-module.exports = function(app) {
-    
+module.exports = function (app) {
+
     /**
      * Primary app routes.
      */
@@ -43,9 +43,13 @@ module.exports = function(app) {
     /**
      * OAuth authentication routes. (Sign in)
      */
-    app.get('/auth/google', passport.authenticate('google', { scope: 'profile email' }));
-    app.get(process.env.GOOGLE_CALLBACK, passport.authenticate('google', { failureRedirect: '/login' }), function (req, res) {
+    app.get('/auth/google', passport.authenticate('google', {
+        scope: 'profile email'
+    }));
+    app.get(process.env.GOOGLE_CALLBACK, passport.authenticate('google', {
+        failureRedirect: '/login'
+    }), function (req, res) {
         res.redirect(req.session.returnTo || '/');
     });
-    
+
 }
