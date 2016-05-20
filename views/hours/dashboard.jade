@@ -8,13 +8,18 @@ block content
     div.content  
       each user in hours
         h3= user.userName
-        table.table.table-striped
+        table.table.table-hover
           thead
             tr
-              th Project
-              th Hours per week
+              th.col-md-6 Project
+              th.col-md-6 Hours per week
           tbody
             each project in user.projects
               tr
                 td= project.name
                 td= project.hours
+            tr
+              td
+                strong Total
+              td
+                strong= user.projects.reduce(function(total, project) { return total + project.hours; }, 0)

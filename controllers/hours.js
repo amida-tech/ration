@@ -9,7 +9,11 @@ var Hours = require('../models/Hours');
  * Hours dashboard.
  */
 exports.dashboard = function (req, res, next) {
-    Hours.find({}, function (err, docs) {
+    Hours.find({}, null, {
+        sort: {
+            'profile.name': 1
+        }
+    }, function (err, docs) {
         if (err) {
             return next(err);
         }
@@ -24,8 +28,10 @@ exports.dashboard = function (req, res, next) {
  * GET /myhours
  * Edit current user hours.
  */
-exports.myHours = function(req, res, next) {
-  Hours.findOne({userId: req.user.id}, function(err, doc) {
+exports.myHours = function (req, res, next) {
+    Hours.findOne({
+        userId: req.user.id
+    }, function (err, doc) {
         if (err) {
             return next(err);
         }
@@ -40,23 +46,25 @@ exports.myHours = function(req, res, next) {
  * GET /api/hours
  * Get all hours.
  */
-exports.getAllHours = function(req, res, next) {
-    
-    Hours.find({}, function(err, docs) {
+exports.getAllHours = function (req, res, next) {
+
+    Hours.find({}, function (err, docs) {
         if (err) {
             return next(err);
-        } 
+        }
         res.send(docs);
     });
-    
+
 };
 
 /**
  * GET /api/hours/me
  * Get all hours for a specific user.
  */
-exports.getHours = function(req, res, next) {
-    Hours.findOne({userId: req.user.id}, function(err, doc) {
+exports.getHours = function (req, res, next) {
+    Hours.findOne({
+        userId: req.user.id
+    }, function (err, doc) {
         if (err) {
             return next(err);
         }
@@ -68,13 +76,15 @@ exports.getHours = function(req, res, next) {
  * PUT /api/hours/me
  * Update an hours entry for a user.
  */
-exports.putHours = function(req, res, next) {  
-    Hours.findOne({userId: req.user.id}, function(err, doc) {
+exports.putHours = function (req, res, next) {
+    Hours.findOne({
+        userId: req.user.id
+    }, function (err, doc) {
         if (err) {
             return next(err);
         }
         doc.projects = req.body.hours;
-        doc.save(function(err, doc) {
+        doc.save(function (err, doc) {
             if (err) {
                 return next(err);
             }
