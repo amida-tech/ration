@@ -25,6 +25,9 @@ cd myproject
 # Install NPM dependencies
 npm install
 
+# Create a .env file from the template
+cp .env.example .env
+
 # With MongoDB running
 node app.js
 ```
