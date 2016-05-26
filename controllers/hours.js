@@ -11,7 +11,7 @@ var Hours = require('../models/Hours');
 exports.dashboard = function (req, res, next) {
     Hours.find({}, null, {
         sort: {
-            'profile.name': 1
+            userName: 1
         }
     }, function (err, docs) {
         if (err) {
