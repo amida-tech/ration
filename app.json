@@ -1,7 +1,7 @@
 {
   "name": "ration",
   "description": "Workload dashboard for organizations.",
-  "repository": "https://github.com/jsachs/ration",
+  "repository": "https://github.com/amida-tech/ration",
   "env": {
     "GOOGLE_CALLBACK": {
       "description": "Google OAuth URL callback",

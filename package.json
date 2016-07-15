@@ -1,9 +1,9 @@
 {
   "name": "ration",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "repository": {
     "type": "git",
-    "url": "https://github.com/jsachs/ration.git"
+    "url": "https://github.com/amida-tech/ration.git"
   },
   "scripts": {
     "start": "node app.js",
