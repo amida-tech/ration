@@ -1,4 +1,4 @@
-Ration [![Dependency Status](https://david-dm.org/jsachs/ration/status.svg?style=flat)](https://david-dm.org/jsachs/ration) [![Build Status](https://circleci.com/gh/jsachs/ration.png?circle-token=903c4db5360a4ad7fd73acb866dfdc990d22fc63)](https://circleci.com/gh/jsachs/ration)
+Ration [![Dependency Status](https://david-dm.org/amida-tech/ration/status.svg?style=flat)](https://david-dm.org/amida-tech/ration) [![Build Status](https://circleci.com/gh/jsachs/ration.png?circle-token=903c4db5360a4ad7fd73acb866dfdc990d22fc63)](https://circleci.com/gh/jsachs/ration)
 =======================
 
 Ration is a tool for managing workload within your organization. Users can login using your organization's Gmail domain, then set their total weekly hours on a per-project basis.
@@ -17,7 +17,7 @@ The easiest way to get started is to clone the repository:
 
 ```bash
 # Get the latest snapshot
-git clone --depth=1 https://github.com/jsachs/ration.git myproject
+git clone --depth=1 https://github.com/amida-tech/ration.git myproject
 
 # Change directory
 cd myproject
@@ -67,7 +67,7 @@ The button draws on the settings in the `app.json` file in this repository.
 
 Contributing
 ------------
-See issues at https://github.com/jsachs/ration/issues.
+See issues at https://github.com/amida-tech/ration/issues.
 
 License
 -------
