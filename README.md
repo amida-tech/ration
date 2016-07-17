@@ -67,6 +67,10 @@ The button draws on the settings in the `app.json` file in this repository.
 
 Contributing
 ------------
+When contributing to Ration, please refer to the [git-flow](https://github.com/nvie/gitflow) branching model.
+For a detailed overview of the process, please read [this blog post](http://nvie.com/posts/a-successful-git-branching-model/).
+You can also review [this handy cheatsheet](http://danielkummer.github.io/git-flow-cheatsheet/).
+
 See issues at https://github.com/amida-tech/ration/issues.
 
 License
