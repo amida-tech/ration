@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "async": "^2.0.0-rc.3",
-    "bcrypt-nodejs": "^0.0.3",
+    "bcrypt": "^0.8.7",
     "body-parser": "^1.15.0",
     "cheerio": "^0.20.0",
     "compression": "^1.6.1",
