@@ -1,4 +1,4 @@
-var bcrypt = require('bcrypt-nodejs');
+var bcrypt = require('bcrypt');
 var crypto = require('crypto');
 var mongoose = require('mongoose');
 
@@ -52,7 +52,7 @@ userSchema.pre('save', function (next) {
         if (err) {
             return next(err);
         }
-        bcrypt.hash(user.password, salt, null, function (err, hash) {
+        bcrypt.hash(user.password, salt, function (err, hash) {
             if (err) {
                 return next(err);
             }
