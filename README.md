@@ -1,5 +1,7 @@
-Ration [![Dependency Status](https://david-dm.org/amida-tech/ration/status.svg?style=flat)](https://david-dm.org/amida-tech/ration) [![Build Status](https://circleci.com/gh/jsachs/ration.png?circle-token=903c4db5360a4ad7fd73acb866dfdc990d22fc63)](https://circleci.com/gh/jsachs/ration)
-=======================
+# Ration 
+[![Dependency Status](https://david-dm.org/amida-tech/ration/status.svg?style=flat)](https://david-dm.org/amida-tech/ration)
+[![Build Status](https://circleci.com/gh/amida-tech/ration.png?style=shield&circle-token=903c4db5360a4ad7fd73acb866dfdc990d22fc63)](https://circleci.com/gh/amida-tech/ration)
+[![Stories in Ready](https://badge.waffle.io/amida-tech/ration.png?label=ready&title=Ready)](https://waffle.io/amida-tech/ration)
 
 Ration is a tool for managing workload within your organization. Users can login using your organization's Gmail domain, then set their total weekly hours on a per-project basis.
 These hours are visible to all users in a dashboard.
