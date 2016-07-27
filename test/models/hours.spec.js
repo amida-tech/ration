@@ -1,10 +1,9 @@
 var chai = require('chai');
 var should = chai.should();
 var Hours = require('../../models/Hours');
-var moment = require('moment');
+var weeksSinceEpoch = require('../../lib/util').weeksSinceEpoch;
 
-var testWeek = moment().isoWeek();
-var testYear = moment().year();
+var testWeek = weeksSinceEpoch();
 
 describe('Hours Model', function() {
   
@@ -26,7 +25,7 @@ describe('Hours Model', function() {
     });
   });
 
-  it('should create correct week and year on hours creation', function(done) {    
+  it('should create correct week on hours creation', function(done) {    
     var hours = new Hours({
       userId: 'user456',
       project: [{
@@ -37,7 +36,6 @@ describe('Hours Model', function() {
     hours.save(function(err, doc) {
       if (err) return done(err);
       doc.week.should.equal(testWeek);
-      doc.year.should.equal(testYear);
       done();
     });
   });
@@ -56,8 +54,8 @@ describe('Hours Model', function() {
     });
   });
 
-  it('should find hours by userId, current week, and current year', function(done) {
-    Hours.findOne({ userId: 'user123', week: testWeek, year: testYear }, function(err, hours) {
+  it('should find hours by userId and current week', function(done) {
+    Hours.findOne({ userId: 'user123', week: testWeek }, function(err, hours) {
       if (err) return done(err);
       hours.userId.should.equal('user123');
       done();
@@ -65,7 +63,7 @@ describe('Hours Model', function() {
   });
 
   it('should delete hours', function(done) {
-    Hours.remove({ userId: 'user123', week: testWeek, year: testYear }, function(err) {
+    Hours.remove({ userId: 'user123', week: testWeek }, function(err) {
       if (err) return done(err);
       done();
     });
