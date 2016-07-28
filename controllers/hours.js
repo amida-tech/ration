@@ -34,7 +34,6 @@ exports.dashboard = function (req, res, next) {
              });
              hours.push(temp);
         });
-        console.log(hours);
 
         res.render('hours/dashboard', {
             title: 'Dashboard',
