@@ -38,8 +38,14 @@ module.exports = function (app) {
     /**
      * API for user project hours.
      */
-    app.get('/api/hours', hoursController.getAllHours);
-    app.get('/api/hours/me', hoursController.getHours);
+    app.get('/api/hours/me', hoursController.getHoursCurrentWeek);
+    app.get('/api/hours/me/week/:num', hoursController.getHoursSpecificWeek);
+    app.get('/api/hours/me/me/weeks/:num', hoursController.getHoursPastWeeks);
+    
+    app.get('/api/hours/', hoursController.getAllHoursCurrentWeek);
+    app.get('/api/hours/week/:num', hoursController.getAllHoursSpecificWeek);
+    app.get('/api/hours/weeks/:num', hoursController.getAllHoursPastWeeks);
+    
     app.put('/api/hours/me', hoursController.putHours);
 
     /**
