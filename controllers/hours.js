@@ -1,5 +1,6 @@
 var _ = require('lodash');
 var async = require('async');
+var mongoose = require('mongoose');
 var passport = require('passport');
 var User = require('../models/User');
 var Hours = require('../models/Hours');
@@ -10,19 +11,36 @@ var weeksSinceEpoch = require('../lib/util').weeksSinceEpoch;
  * Hours dashboard.
  */
 exports.dashboard = function (req, res, next) {
-    Hours.find({}, null, {
-        sort: {
-            userName: 1
+    Hours.find({
+        week: {
+            $gte: weeksSinceEpoch() - 4
         }
     }, function (err, docs) {
         if (err) {
             return next(err);
         }
+        var allData = _.groupBy(docs, 'userName');
+        var hours = [];
+        _.forOwn(allData, function(value, key) {
+             var temp = {
+                 name: key,
+                 data: _.sortBy(value, 'week'),
+                 projects: []
+             };
+             _.forEach(value, function(val) {
+                 _.forEach(val.projects, function(project) {
+                     temp.projects.push(project.name);
+                 });
+             });
+             hours.push(temp);
+        });
+        console.log(hours);
+
         res.render('hours/dashboard', {
             title: 'Dashboard',
-            hours: docs
+            hours: hours
         });
-    })
+    });
 };
 
 /**
@@ -31,7 +49,8 @@ exports.dashboard = function (req, res, next) {
  */
 exports.myHours = function (req, res, next) {
     Hours.findOne({
-        userId: req.user.id
+        userId: req.user.id,
+        week: weeksSinceEpoch()
     }, function (err, doc) {
         if (err) {
             return next(err);

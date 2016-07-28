@@ -10,6 +10,7 @@ var weeksSinceEpoch = function () {
 
 var hoursSchema = new mongoose.Schema({
     userId: String,
+    userName: String,
     week: Number,
     projects: [{
         name: String,
