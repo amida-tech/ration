@@ -1,4 +1,5 @@
 extends ../layout
+include ../mixins/week
 
 block content
   h2 Hours Dashboard
@@ -12,9 +13,9 @@ block content
 
           thead
             tr
-              th.col-md-6 Project
+              th Project
               each week in user.data
-                th.col-md-6= week.week
+                +formatWeek(week.week)
           tbody
             each project in user.projects
               tr
