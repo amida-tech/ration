@@ -1,25 +1,33 @@
 extends ../layout
+include ../mixins/week
 
 block content
   h2 Hours Dashboard
   hr
-  
   div.container
     div.content  
       each user in hours
-        h3= user.userName
+        h3= user.name
         table.table.table-hover
+
           thead
             tr
-              th.col-md-6 Project
-              th.col-md-6 Hours per week
+              th Project
+              each week in user.data
+                +formatWeek(week.week)
           tbody
             each project in user.projects
               tr
-                td= project.name
-                td= project.hours
+                td= project
+                each week in user.data
+                  each item in week.projects
+                    if item.name == project
+                      td= item.hours
+                    else
+                      td= 0
             tr
               td
                 strong Total
-              td
-                strong= user.projects.reduce(function(total, project) { return total + project.hours; }, 0)
+              each week in user.data
+                td
+                  strong= week.projects.reduce(function(total, project) { return total + project.hours; }, 0)
