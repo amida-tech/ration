@@ -1,0 +1,5 @@
+mixin formatWeek(weeksSinceEpoch)
+    - var days = (weeksSinceEpoch * 7) + 4;
+    - var epochTime = days * 8.64e7;
+    - var date = new Date(epochTime).toISOString().slice(0, 10);
+      th= date
