@@ -19,11 +19,13 @@ block content
               tr
                 td= project
                 each week in u.data
+                  - var found = false
                   each item in week.projects
                     if item.name == project
-                      td= item.hours
-                    else
-                      td= 0
+                      - found = true
+                      td= item.hours             
+                  - if (!found)
+                    td= 0
             tr
               td
                 strong Total
