@@ -29,7 +29,9 @@ exports.dashboard = function (req, res, next) {
              };
              _.forEach(value, function(val) {
                  _.forEach(val.projects, function(project) {
-                     temp.projects.push(project.name);
+                     if (temp.projects.indexOf(project.name) < 0) {
+                         temp.projects.push(project.name);
+                     }
                  });
              });
              hours.push(temp);
@@ -54,10 +56,29 @@ exports.myHours = function (req, res, next) {
         if (err) {
             return next(err);
         }
-        res.render('hours/myhours', {
-            title: 'My Hours',
-            hours: doc
-        });
+
+        // If there is no Hours doc from the current week,
+        // get the most recent Hours doc.
+        if (!doc) {
+            Hours
+                .findOne({userId: req.user.id})
+                .sort('-week')
+                .exec(function(err, doc) {
+                    if (err) {
+                        return next(err);
+                    }
+                    console.log(doc);
+                    res.render('hours/myhours', {
+                        title: 'My Hours',
+                        hours: doc
+                    });
+                });
+        } else {
+            res.render('hours/myhours', {
+                title: 'My Hours',
+                hours: doc
+            });
+        }
     });
 };
 
@@ -180,7 +201,7 @@ exports.getAllHoursPastWeeks = function (req, res, next) {
  * PUT /api/hours/me
  * Update the hours entry for the current week for the logged in user.
  */
-exports.putHours = function (req, res, next) {
+exports.putHours = function (req, res, next) {    
     Hours.findOne({
         userId: req.user.id,
         week: weeksSinceEpoch()
@@ -188,13 +209,27 @@ exports.putHours = function (req, res, next) {
         if (err) {
             return next(err);
         }
-        doc.projects = req.body.hours;
-        doc.save(function (err, doc) {
-            if (err) {
-                return next(err);
-            }
-            res.send(doc);
-        });
+        if (!doc) {
+            doc = new Hours({
+                userId: req.user.id,
+                userName: req.user.profile.name,
+                projects: req.body.hours
+            });
+            doc.save(function(err, doc) {
+                if (err) {
+                    return next(err);
+                }
+                res.send(doc);
+            });
+        } else {
+            doc.projects = req.body.hours;
+            doc.save(function (err, doc) {
+                if (err) {
+                    return next(err);
+                }
+                res.send(doc);
+            });
+        }
     });
 }
 

@@ -15,6 +15,7 @@ block content
               each week in u.data
                 +formatWeek(week.week)
           tbody
+            p= u.projects
             each project in u.projects
               tr
                 td= project
