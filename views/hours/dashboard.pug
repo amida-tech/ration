@@ -15,7 +15,6 @@ block content
               each week in u.data
                 +formatWeek(week.week)
           tbody
-            p= u.projects
             each project in u.projects
               tr
                 td= project
@@ -24,7 +23,7 @@ block content
                   each item in week.projects
                     if item.name == project
                       - found = true
-                      td= item.hours             
+                      td= item.hours
                   - if (!found)
                     td= 0
             tr

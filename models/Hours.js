@@ -23,7 +23,7 @@ var hoursSchema = new mongoose.Schema({
  */
 hoursSchema.index({
     userId: 1,
-    week: 1,
+    week: 1
 }, {
     unique: true
 });
@@ -33,7 +33,7 @@ hoursSchema.index({
  * Hours are archived by number of weeks since the Epoch + 4 days
  * This means weeks start on Monday
  */
-hoursSchema.pre('save', function (next) {    
+hoursSchema.pre('save', function (next) {
     var hours = this;
     if (hours.isNew) {
         hours.week = weeksSinceEpoch();
@@ -44,4 +44,3 @@ hoursSchema.pre('save', function (next) {
 var Hours = mongoose.model('Hours', hoursSchema);
 
 module.exports = Hours;
-

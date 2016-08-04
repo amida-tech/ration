@@ -21,20 +21,20 @@ exports.dashboard = function (req, res, next) {
         }
         var allData = _.groupBy(docs, 'userName');
         var hours = [];
-        _.forOwn(allData, function(value, key) {
-             var temp = {
-                 name: key,
-                 data: _.sortBy(value, 'week'),
-                 projects: []
-             };
-             _.forEach(value, function(val) {
-                 _.forEach(val.projects, function(project) {
-                     if (temp.projects.indexOf(project.name) < 0) {
-                         temp.projects.push(project.name);
-                     }
-                 });
-             });
-             hours.push(temp);
+        _.forOwn(allData, function (value, key) {
+            var temp = {
+                name: key,
+                data: _.sortBy(value, 'week'),
+                projects: []
+            };
+            _.forEach(value, function (val) {
+                _.forEach(val.projects, function (project) {
+                    if (temp.projects.indexOf(project.name) < 0) {
+                        temp.projects.push(project.name);
+                    }
+                });
+            });
+            hours.push(temp);
         });
 
         res.render('hours/dashboard', {
@@ -61,9 +61,11 @@ exports.myHours = function (req, res, next) {
         // get the most recent Hours doc.
         if (!doc) {
             Hours
-                .findOne({userId: req.user.id})
+                .findOne({
+                    userId: req.user.id
+                })
                 .sort('-week')
-                .exec(function(err, doc) {
+                .exec(function (err, doc) {
                     if (err) {
                         return next(err);
                     }
@@ -128,7 +130,7 @@ exports.getHoursPastWeeks = function (req, res, next) {
     if (req.params.num < 1) {
         return next(new Error("Must request at least one week of data"));
     }
-    
+
     Hours.find({
         userId: req.user.id,
         week: {
@@ -165,7 +167,7 @@ exports.getAllHoursSpecificWeek = function (req, res, next) {
     if (req.params.num > weeksSinceEpoch()) {
         return next(new Error("Cannot specify weeks in the future"));
     }
-    
+
     Hours.find({
         week: req.params.num
     }, function (err, docs) {
@@ -201,7 +203,7 @@ exports.getAllHoursPastWeeks = function (req, res, next) {
  * PUT /api/hours/me
  * Update the hours entry for the current week for the logged in user.
  */
-exports.putHours = function (req, res, next) {    
+exports.putHours = function (req, res, next) {
     Hours.findOne({
         userId: req.user.id,
         week: weeksSinceEpoch()
@@ -215,7 +217,7 @@ exports.putHours = function (req, res, next) {
                 userName: req.user.profile.name,
                 projects: req.body.hours
             });
-            doc.save(function(err, doc) {
+            doc.save(function (err, doc) {
                 if (err) {
                     return next(err);
                 }
@@ -232,9 +234,3 @@ exports.putHours = function (req, res, next) {
         }
     });
 }
-
-
-
-
-
-

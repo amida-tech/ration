@@ -41,11 +41,11 @@ module.exports = function (app) {
     app.get('/api/hours/me', hoursController.getHoursCurrentWeek);
     app.get('/api/hours/me/week/:num', hoursController.getHoursSpecificWeek);
     app.get('/api/hours/me/me/weeks/:num', hoursController.getHoursPastWeeks);
-    
+
     app.get('/api/hours/', hoursController.getAllHoursCurrentWeek);
     app.get('/api/hours/week/:num', hoursController.getAllHoursSpecificWeek);
     app.get('/api/hours/weeks/:num', hoursController.getAllHoursPastWeeks);
-    
+
     app.put('/api/hours/me', hoursController.putHours);
 
     /**
