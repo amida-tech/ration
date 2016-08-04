@@ -13,7 +13,7 @@ var weeksSinceEpoch = require('../lib/util').weeksSinceEpoch;
 exports.dashboard = function (req, res, next) {
     Hours.find({
         week: {
-            $gte: weeksSinceEpoch() - 4
+            $gte: weeksSinceEpoch() - 3
         }
     }, function (err, docs) {
         if (err) {
