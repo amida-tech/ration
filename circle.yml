@@ -18,3 +18,7 @@ deployment:
         branch: master
         heroku:
             appname: tranquil-oasis-84608
+    staging:
+        branch: develop
+        heroku:
+            appname: fast-brushlands-44285
