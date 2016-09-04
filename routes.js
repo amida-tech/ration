@@ -1,9 +1,10 @@
 /**
  * Controllers (route handlers).
  */
-var userController = require('./controllers/user');
+var csvController = require('./controllers/csv');
 var hoursController = require('./controllers/hours');
 var letsencryptController = require('./controllers/letsencrypt');
+var userController = require('./controllers/user');
 
 /**
  * API keys and Passport configuration.
@@ -47,6 +48,8 @@ module.exports = function (app) {
     app.get('/api/hours/weeks/:num', hoursController.getAllHoursPastWeeks);
 
     app.put('/api/hours/me', hoursController.putHours);
+
+    app.get('/api/csv/:num', csvController.getAllHoursPastWeeksCSV);
 
     /**
      * OAuth authentication routes. (Sign in)

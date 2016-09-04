@@ -11,6 +11,10 @@ describe('Hours Model', function() {
     Hours.remove({}, done);
   });
 
+  after(function(done) {
+    Hours.remove({}, done);
+  });
+
   it('should create a new hours object', function(done) {
     var hours = new Hours({
       userId: 'user123',
