@@ -47,5 +47,9 @@ $(document).ready(function() {
   /**
    * Functions for Dashboard
    */
+  $("#download_hours").click(function(e){
+      e.preventDefault();
+      window.location = "/api/csv/1";
+  });
 
 });

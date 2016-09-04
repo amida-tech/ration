@@ -31,8 +31,9 @@ exports.getAllHoursPastWeeksCSV = function (req, res, next) {
         }
 
         var ret = [];
-        _.forEach(docs, function(doc) {
-            _.forEach(doc.projects, function(project) {
+
+        _.forEach(docs, function (doc) {
+            _.forEach(doc.projects, function (project) {
                 var days = (doc.week * 7) + 4;
                 var epochTime = days * 8.64e7;
                 var date = new Date(epochTime).toISOString().slice(0, 10);
@@ -44,7 +45,8 @@ exports.getAllHoursPastWeeksCSV = function (req, res, next) {
                 ]);
             });
         });
-        console.log(ret);
+
+        res.set('Content-Disposition', 'attachment; filename="hours.csv"');
         res.csv(ret);
     });
 }
