@@ -1,10 +1,9 @@
 /**
  * Controllers (route handlers).
  */
-var csvController = require('./controllers/csv');
-var hoursController = require('./controllers/hours');
-var letsencryptController = require('./controllers/letsencrypt');
-var userController = require('./controllers/user');
+var hoursController = require('./api/controllers/hours');
+var letsencryptController = require('./api/controllers/letsencrypt');
+var userController = require('./api/controllers/user');
 
 /**
  * API keys and Passport configuration.
@@ -35,32 +34,4 @@ module.exports = function (app) {
     app.get('/dashboard', passportConfig.isAuthenticated, hoursController.dashboard);
     app.get('/myhours', passportConfig.isAuthenticated, hoursController.myHours);
     app.get('/.well-known/acme-challenge/:id', letsencryptController.challenge);
-
-    /**
-     * API for user project hours.
-     */
-    app.get('/api/hours/me', hoursController.getHoursCurrentWeek);
-    app.get('/api/hours/me/week/:num', hoursController.getHoursSpecificWeek);
-    app.get('/api/hours/me/me/weeks/:num', hoursController.getHoursPastWeeks);
-
-    app.get('/api/hours/', hoursController.getAllHoursCurrentWeek);
-    app.get('/api/hours/week/:num', hoursController.getAllHoursSpecificWeek);
-    app.get('/api/hours/weeks/:num', hoursController.getAllHoursPastWeeks);
-
-    app.put('/api/hours/me', hoursController.putHours);
-
-    app.get('/api/csv/:num', csvController.getAllHoursPastWeeksCSV);
-
-    /**
-     * OAuth authentication routes. (Sign in)
-     */
-    app.get('/auth/google', passport.authenticate('google', {
-        scope: 'profile email'
-    }));
-    app.get(process.env.GOOGLE_CALLBACK, passport.authenticate('google', {
-        failureRedirect: '/login'
-    }), function (req, res) {
-        res.redirect(req.session.returnTo || '/');
-    });
-
 }

@@ -1,8 +1,8 @@
 var _ = require('lodash');
 var async = require('async');
 var mongoose = require('mongoose');
-var Hours = require('../models/Hours');
-var weeksSinceEpoch = require('../lib/util').weeksSinceEpoch;
+var Hours = require('../../models/Hours');
+var weeksSinceEpoch = require('../../lib/util').weeksSinceEpoch;
 
 /**
  * CSV download module
