@@ -16,6 +16,7 @@ var app = express();
  */
 require('./config/express')(app);
 require('./routes')(app);
+require('./api/routes')(app);
 
 /**
  * Connect to MongoDB.

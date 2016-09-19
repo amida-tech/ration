@@ -2,9 +2,9 @@ var _ = require('lodash');
 var async = require('async');
 var mongoose = require('mongoose');
 var passport = require('passport');
-var User = require('../models/User');
-var Hours = require('../models/Hours');
-var weeksSinceEpoch = require('../lib/util').weeksSinceEpoch;
+var User = require('../../models/User');
+var Hours = require('../../models/Hours');
+var weeksSinceEpoch = require('../../lib/util').weeksSinceEpoch;
 
 /**
  * GET /dashboard

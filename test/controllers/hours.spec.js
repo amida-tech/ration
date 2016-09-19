@@ -1,6 +1,6 @@
 var chai = require('chai');
 var should = chai.should();
-var hours = require('../../controllers/hours');
+var hours = require('../../api/controllers/hours');
 var weeksSinceEpoch = require('../../lib/util').weeksSinceEpoch;
 
 describe('Hours Controller:', function() {
