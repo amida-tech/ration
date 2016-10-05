@@ -11,17 +11,17 @@ module.exports = function (app) {
     /**
      * API for user project hours.
      */
-    app.get('/api/hours/me', hoursController.getHoursCurrentWeek);
-    app.get('/api/hours/me/week/:num', hoursController.getHoursSpecificWeek);
-    app.get('/api/hours/me/me/weeks/:num', hoursController.getHoursPastWeeks);
+    app.get('/api/hours/me', passportConfig.isAuthenticated, hoursController.getHoursCurrentWeek);
+    app.get('/api/hours/me/week/:num', passportConfig.isAuthenticated, hoursController.getHoursSpecificWeek);
+    app.get('/api/hours/me/me/weeks/:num', passportConfig.isAuthenticated, hoursController.getHoursPastWeeks);
 
-    app.get('/api/hours/', hoursController.getAllHoursCurrentWeek);
-    app.get('/api/hours/week/:num', hoursController.getAllHoursSpecificWeek);
-    app.get('/api/hours/weeks/:num', hoursController.getAllHoursPastWeeks);
+    app.get('/api/hours/', passportConfig.isAuthenticated, hoursController.getAllHoursCurrentWeek);
+    app.get('/api/hours/week/:num', passportConfig.isAuthenticated, hoursController.getAllHoursSpecificWeek);
+    app.get('/api/hours/weeks/:num', passportConfig.isAuthenticated, hoursController.getAllHoursPastWeeks);
 
-    app.put('/api/hours/me', hoursController.putHours);
+    app.put('/api/hours/me', passportConfig.isAuthenticated, hoursController.putHours);
 
-    app.get('/api/csv/:num', csvController.getAllHoursPastWeeksCSV);
+    app.get('/api/csv/:num', passportConfig.isAuthenticated, csvController.getAllHoursPastWeeksCSV);
 
     /**
      * OAuth authentication routes. (Sign in)
