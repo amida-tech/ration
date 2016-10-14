@@ -15,13 +15,13 @@ block content
             if hours.projects
               each project in hours.projects
                 tr
-                  td
-                    input(type="text" class="form-control" value=project.name)
+                  td(class="col-md-6")
+                    select(type="text" class="form-control" value=project.name)
                   td
                     input(type="text" class="form-control" value=project.hours)
               tr
-                td
-                  input(type="text" class="form-control")
+                td(class="col-md-6")
+                  select(type="text" class="form-control")
                 td
                   input(type="text" class="form-control")
     
