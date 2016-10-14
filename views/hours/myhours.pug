@@ -11,17 +11,19 @@ block content
             th Project
             th Hours per week
         tbody
-          each project in hours.projects
-            tr
-              td
-                input(type="text" class="form-control" value=project.name)
-              td
-                input(type="text" class="form-control" value=project.hours)
-          tr
-            td
-              input(type="text" class="form-control")
-            td
-              input(type="text" class="form-control")
+          if hours
+            if hours.projects
+              each project in hours.projects
+                tr
+                  td
+                    input(type="text" class="form-control" value=project.name)
+                  td
+                    input(type="text" class="form-control" value=project.hours)
+              tr
+                td
+                  input(type="text" class="form-control")
+                td
+                  input(type="text" class="form-control")
     
       a.btn.btn-default.pull-left#add_row Add Row
       a.btn.btn-success.pull-right#post_hours Submit
