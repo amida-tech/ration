@@ -21,6 +21,7 @@ module.exports = function (app) {
     app.get('/api/hours/weeks/:num', passportConfig.isAuthenticated, hoursController.getAllHoursPastWeeks);
 
     app.get('/api/projects/', passportConfig.isAuthenticated, projectsController.getAllProjects);
+    app.put('/api/projects', passportConfig.isAuthenticated, projectsController.putProjects);
 
     app.put('/api/hours/me', passportConfig.isAuthenticated, hoursController.putHours);
 
