@@ -9,23 +9,15 @@ block content
         thead
           tr
             th Project
-            th Hours per week
         tbody
-          if hours
-            if hours.projects
-              each project in hours.projects
+          if projects
+              each project in projects
                 tr
-                  td(class="col-md-6")
-                    select(type="text" class="form-control" value=project.name)
-                      option 1
-                      option 2
-                  td
-                    input(type="text" class="form-control" value=project.hours)
+                  td(class="col-md-12")
+                    input(type="text" class="form-control" value=project.name)
               tr
-                td(class="col-md-6")
-                  select(type="text" class="form-control")
-                td
+                td(class="col-md-12")
                   input(type="text" class="form-control")
     
-      a.btn.btn-default.pull-left#add_row Add Row
-      a.btn.btn-success.pull-right#post_hours Submit
+      a.btn.btn-default.pull-left#add_project Add Row
+      a.btn.btn-success.pull-right#save_projects Save

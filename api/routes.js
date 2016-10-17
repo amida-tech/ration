@@ -6,6 +6,7 @@ var passportConfig = require('../config/passport');
 
 var csvController = require('./controllers/csv');
 var hoursController = require('./controllers/hours');
+var projectsController = require('./controllers/projects');
 
 module.exports = function (app) {
     /**
@@ -18,6 +19,8 @@ module.exports = function (app) {
     app.get('/api/hours/', passportConfig.isAuthenticated, hoursController.getAllHoursCurrentWeek);
     app.get('/api/hours/week/:num', passportConfig.isAuthenticated, hoursController.getAllHoursSpecificWeek);
     app.get('/api/hours/weeks/:num', passportConfig.isAuthenticated, hoursController.getAllHoursPastWeeks);
+
+    app.get('/api/projects/', passportConfig.isAuthenticated, projectsController.getAllProjects);
 
     app.put('/api/hours/me', passportConfig.isAuthenticated, hoursController.putHours);
 
