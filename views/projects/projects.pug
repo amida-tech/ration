@@ -1,0 +1,31 @@
+extends ../layout
+
+block content
+  h2 Projects
+  hr
+  div.container
+    div.content
+      table.table.table-bordered#my_hours_table
+        thead
+          tr
+            th Project
+            th Hours per week
+        tbody
+          if hours
+            if hours.projects
+              each project in hours.projects
+                tr
+                  td(class="col-md-6")
+                    select(type="text" class="form-control" value=project.name)
+                      option 1
+                      option 2
+                  td
+                    input(type="text" class="form-control" value=project.hours)
+              tr
+                td(class="col-md-6")
+                  select(type="text" class="form-control")
+                td
+                  input(type="text" class="form-control")
+    
+      a.btn.btn-default.pull-left#add_row Add Row
+      a.btn.btn-success.pull-right#post_hours Submit

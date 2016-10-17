@@ -15,6 +15,8 @@
           a(href='/dashboard') Dashboard
         li(class=(title == 'My Hours') ? 'active' : undefined)
           a(href='/myhours') My Hours
+        li(class=(title == 'Projects') ? 'active' : undefined)
+          a(href='/projects') Projects
       ul.nav.navbar-nav.navbar-right
         if (!user)
           li(class=(title == 'Login') ? 'active' : undefined)
