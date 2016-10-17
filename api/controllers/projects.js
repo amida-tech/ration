@@ -26,19 +26,6 @@ exports.projects = function (req, res, next) {
 };
 
 /**
- * GET /api/projects
- * Get all projects in Ration.
- */
-exports.getAllProjects = function (req, res, next) {
-    Projects.find({}, function (err, docs) {
-        if (err) {
-            return next(err);
-        }
-        res.send(docs);
-    });
-};
-
-/**
  * PUT /api/projects
  * Update the projects available in the dropdown.
  */
