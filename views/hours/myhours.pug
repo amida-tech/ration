@@ -17,13 +17,17 @@ block content
                 tr
                   td(class="col-md-6")
                     select(type="text" class="form-control" value=project.name)
+                      each newProj in projects
+                        option= newProj
                   td
                     input(type="text" class="form-control" value=project.hours)
-              tr
-                td(class="col-md-6")
-                  select(type="text" class="form-control")
-                td
-                  input(type="text" class="form-control")
+          tr
+            td(class="col-md-6")
+              select(type="text" class="form-control")#project_select
+                each newProj in projects
+                  option= newProj.name
+            td
+              input(type="text" class="form-control")
     
       a.btn.btn-default.pull-left#add_row Add Row
       a.btn.btn-success.pull-right#post_hours Submit

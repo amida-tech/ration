@@ -6,7 +6,15 @@ $(document).ready(function () {
 
     // Add a row to the projects list
     $("#add_row").click(function () {
-        $('#my_hours_table tr:last').after('<tr><td><select type="text" class="form-control"></td><td><input type="text" class="form-control"></td></tr>');
+
+        var optionString = "";
+        $('#project_select').find('option').text(function (i, el) {
+            optionString = optionString + "<option>" + el + "</option>";
+        })
+
+        console.log(optionString);
+
+        $('#my_hours_table tr:last').after('<tr><td><select type="text" class="form-control">' + optionString + '</td><td><input type="text" class="form-control"></td></tr>');
     });
 
     // Submit the projects list
@@ -50,6 +58,48 @@ $(document).ready(function () {
     $("#download_hours").click(function (e) {
         e.preventDefault();
         window.location = "/api/csv/1";
+    });
+
+    /**
+     * Functions for Project List
+     */
+
+    //Add a line to the table.
+    $("#add_project").click(function (e) {
+        $('#projects_table tr:last').after('<tr><td><input type="text" class="form-control"></td></tr>');
+    });
+
+    // Submit the projects list
+    $("#save_projects").click(function () {
+        var url = window.location;
+        var hostname = $('<a>').prop('href', url).prop('hostname');
+        var projectData = [];
+
+        $('#projects_table > tbody').find('tr').each(function (i, el) {
+            var $tds = $(this).find('td');
+
+            var project = $tds.eq(0).find('input').val();
+
+            if (project) {
+                projectData.push({
+                    name: project
+                });
+            }
+        });
+
+        $.ajax({
+            type: 'PUT',
+            url: '/api/projects',
+            data: {
+                projects: projectData
+            },
+
+            success: function (data, status) {
+                window.location.href = '/dashboard';
+            }
+        });
+
+        event.preventDefault();
     });
 
 });
