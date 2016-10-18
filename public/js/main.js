@@ -6,14 +6,10 @@ $(document).ready(function () {
 
     // Add a row to the projects list
     $("#add_row").click(function () {
-
         var optionString = "";
         $('#project_select').find('option').text(function (i, el) {
             optionString = optionString + "<option>" + el + "</option>";
         })
-
-        console.log(optionString);
-
         $('#my_hours_table tr:last').after('<tr><td><select type="text" class="form-control">' + optionString + '</td><td><input type="text" class="form-control"></td></tr>');
     });
 
