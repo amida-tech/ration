@@ -52,7 +52,7 @@ exports.putProjects = function (req, res, next) {
             if (err) {
                 console.log(err);
             } else {
-                res.send(200);
+                res.sendStatus(200);
             }
         });
 
