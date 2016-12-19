@@ -9,7 +9,7 @@ block content
   div.container
     div.content  
       each u in hours
-        - if (u.inactive)
+        unless u.inactive
           h3= u.name
           table.table.table-hover
             thead
