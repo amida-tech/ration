@@ -35,7 +35,9 @@ var userSchema = new mongoose.Schema({
             type: String,
             default: ''
         }
-    }
+    },
+
+    inactive: Boolean
 }, {
     timestamps: true
 });

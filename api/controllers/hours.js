@@ -5,6 +5,7 @@ var passport = require('passport');
 var User = require('../../models/User');
 var Hours = require('../../models/Hours');
 var weeksSinceEpoch = require('../../lib/util').weeksSinceEpoch;
+var ObjectId = require('mongodb').ObjectId;
 
 /**
  * GET /dashboard
@@ -19,11 +20,11 @@ exports.dashboard = function (req, res, next) {
         if (err) {
             return next(err);
         }
-        var allData = _.groupBy(docs, 'userName');
+        var allData = _.groupBy(docs, 'userId');
         var hours = [];
         _.forOwn(allData, function (value, key) {
             var temp = {
-                name: key,
+                id: key,
                 data: _.sortBy(value, 'week'),
                 projects: []
             };
@@ -34,12 +35,25 @@ exports.dashboard = function (req, res, next) {
                     }
                 });
             });
-            hours.push(temp);
-        });
-
-        res.render('hours/dashboard', {
-            title: 'Dashboard',
-            hours: hours
+            // check for inactive user, get userName
+            User.findOne({
+                _id: ObjectId(key)
+            }, function (err, doc) {
+                if (err) {
+                    return next(err);
+                }
+                temp.name = doc.profile.name;
+                if (doc.inactive != undefined && doc.inactive == true) {
+                    temp.inactive = true;
+                }
+                hours.push(temp);
+                if (hours.length === Object.keys(allData).length) {
+                    res.render('hours/dashboard', {
+                        title: 'Dashboard',
+                        hours: hours
+                    });
+                }
+            });
         });
     });
 };
