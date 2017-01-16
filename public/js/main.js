@@ -22,7 +22,7 @@ $(document).ready(function () {
         $('#my_hours_table > tbody').find('tr').each(function (i, el) {
             var $tds = $(this).find('td');
 
-            var project = $tds.eq(0).find('input').val();
+            var project = $tds.eq(0).find('select').find('option:selected').text();
             var hours = $tds.eq(1).find('input').val();
 
             if (project && hours) {
