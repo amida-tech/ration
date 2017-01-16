@@ -18,7 +18,10 @@ block content
                   td(class="col-md-6")
                     select(type="text" class="form-control" value=project.name)
                       each newProj in projects
-                        option= newProj
+                        if project.name == newProj.name
+                          option(selected= true)= newProj.name
+                        else
+                          option= newProj.name
                   td
                     input(type="text" class="form-control" value=project.hours)
           tr

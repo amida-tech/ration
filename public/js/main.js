@@ -26,10 +26,22 @@ $(document).ready(function () {
             var hours = $tds.eq(1).find('input').val();
 
             if (project && hours) {
-                hoursData.push({
-                    name: project,
-                    hours: hours
-                });
+                // check if a project name already exists
+                // in the case of a duplicate project name we only take the first
+                var result = null;
+
+                if (hoursData.length > 0) {
+                    result = hoursData.filter(function (data) {
+                        return data.name === project;
+                    })[0].name;
+                }
+
+                if (!result) {
+                    hoursData.push({
+                        name: project,
+                        hours: hours
+                    });
+                }
             }
         });
 
