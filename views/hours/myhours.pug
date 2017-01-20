@@ -11,15 +11,24 @@ block content
             th Project
             th Hours per week
         tbody
-          each project in hours.projects
-            tr
-              td
-                input(type="text" class="form-control" value=project.name)
-              td
-                input(type="text" class="form-control" value=project.hours)
+          if hours
+            if hours.projects
+              each project in hours.projects
+                tr
+                  td(class="col-md-6")
+                    select(type="text" class="form-control" value=project.name)
+                      each newProj in projects
+                        if project.name == newProj.name
+                          option(selected= true)= newProj.name
+                        else
+                          option= newProj.name
+                  td
+                    input(type="text" class="form-control" value=project.hours)
           tr
-            td
-              input(type="text" class="form-control")
+            td(class="col-md-6")
+              select(type="text" class="form-control")#project_select
+                each newProj in projects
+                  option= newProj.name
             td
               input(type="text" class="form-control")
     
