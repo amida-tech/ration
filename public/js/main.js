@@ -28,15 +28,15 @@ $(document).ready(function () {
             if (project && hours) {
                 // check if a project name already exists
                 // in the case of a duplicate project name we only take the first
-                var result = null;
-
+                var result = [];
+                
                 if (hoursData.length > 0) {
                     result = hoursData.filter(function (data) {
                         return data.name === project;
-                    })[0].name;
+                    });
                 }
-
-                if (!result) {
+                
+                if (result.length === 0) {
                     hoursData.push({
                         name: project,
                         hours: hours
