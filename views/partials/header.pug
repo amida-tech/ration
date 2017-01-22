@@ -15,8 +15,6 @@
           a(href='/dashboard') Dashboard
         li(class=(title == 'My Hours') ? 'active' : undefined)
           a(href='/myhours') My Hours
-        li(class=(title == 'Projects') ? 'active' : undefined)
-          a(href='/projects') Projects
       ul.nav.navbar-nav.navbar-right
         if (!user)
           li(class=(title == 'Login') ? 'active' : undefined)
@@ -35,9 +33,6 @@
             ul.dropdown-menu
               li
                 a(href='/account') My Account
-              li.divider
-              li
-                a(href='/projects') Projects
               li.divider
               li
                 a(href='/logout') Logout
