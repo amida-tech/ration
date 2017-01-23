@@ -4,6 +4,7 @@
 var hoursController = require('./api/controllers/hours');
 var letsencryptController = require('./api/controllers/letsencrypt');
 var userController = require('./api/controllers/user');
+var projectController = require('./api/controllers/projects');
 
 /**
  * API keys and Passport configuration.
@@ -33,5 +34,6 @@ module.exports = function (app) {
     app.get('/account/unlink/:provider', passportConfig.isAuthenticated, userController.getOauthUnlink);
     app.get('/dashboard', passportConfig.isAuthenticated, hoursController.dashboard);
     app.get('/myhours', passportConfig.isAuthenticated, hoursController.myHours);
+    app.get('/edit-projects', passportConfig.isAuthenticated, projectController.projects);
     app.get('/.well-known/acme-challenge/:id', letsencryptController.challenge);
 }

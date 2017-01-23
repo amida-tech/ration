@@ -1,0 +1,23 @@
+extends ../layout
+
+block content
+  h2 Projects
+  hr
+  div.container
+    div.content
+      table.table.table-bordered#projects_table
+        thead
+          tr
+            th Project
+        tbody
+          if projects
+              each project in projects
+                tr
+                  td(class="col-md-12")
+                    input(type="text" class="form-control" value=project.name)
+              tr
+                td(class="col-md-12")
+                  input(type="text" class="form-control")
+    
+      a.btn.btn-default.pull-left#add_project Add Row
+      a.btn.btn-success.pull-right#save_projects Save

@@ -4,6 +4,7 @@ var mongoose = require('mongoose');
 var passport = require('passport');
 var User = require('../../models/User');
 var Hours = require('../../models/Hours');
+var Projects = require('../../models/Projects');
 var weeksSinceEpoch = require('../../lib/util').weeksSinceEpoch;
 var ObjectId = require('mongodb').ObjectId;
 
@@ -63,6 +64,7 @@ exports.dashboard = function (req, res, next) {
  * Edit current user hours.
  */
 exports.myHours = function (req, res, next) {
+
     Hours.findOne({
         userId: req.user.id,
         week: weeksSinceEpoch()
@@ -71,30 +73,41 @@ exports.myHours = function (req, res, next) {
             return next(err);
         }
 
-        // If there is no Hours doc from the current week,
-        // get the most recent Hours doc.
-        if (!doc) {
-            Hours
-                .findOne({
-                    userId: req.user.id
-                })
-                .sort('-week')
-                .exec(function (err, doc) {
-                    if (err) {
-                        return next(err);
-                    }
-                    console.log(doc);
-                    res.render('hours/myhours', {
-                        title: 'My Hours',
-                        hours: doc
+        //Get list of projects for dropdown.
+        Projects.find({}, function (err, projects) {
+            if (err) {
+                return next(err);
+            }
+
+            // If there is no Hours doc from the current week,
+            // get the most recent Hours doc.
+            if (!doc) {
+                Hours
+                    .findOne({
+                        userId: req.user.id
+                    })
+                    .sort('-week')
+                    .exec(function (err, doc) {
+                        if (err) {
+                            return next(err);
+                        }
+                        console.log(doc);
+                        res.render('hours/myhours', {
+                            title: 'My Hours',
+                            hours: doc,
+                            projects: projects
+                        });
                     });
+            } else {
+
+                res.render('hours/myhours', {
+                    title: 'My Hours',
+                    hours: doc,
+                    projects: projects
                 });
-        } else {
-            res.render('hours/myhours', {
-                title: 'My Hours',
-                hours: doc
-            });
-        }
+            }
+
+        });
     });
 };
 
