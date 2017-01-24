@@ -13,6 +13,7 @@ var userSchema = new mongoose.Schema({
 
     google: String,
     tokens: Array,
+    roles: Array,
 
     profile: {
         name: {
@@ -48,6 +49,7 @@ userSchema.pre('save', function (next) {
     if (!user.isModified('password')) {
         return next();
     }
+
     bcrypt.genSalt(10, function (err, salt) {
         if (err) {
             return next(err);
