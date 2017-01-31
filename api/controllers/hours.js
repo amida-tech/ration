@@ -38,6 +38,13 @@ exports.dashboard = function (req, res, next) {
             hours.push(temp);
         });
 
+        // sort the hours by user name
+        hours.sort(function (a, b) {
+            if (a.name < b.name) return -1;
+            if (a.name > b.name) return 1;
+            return 0;
+        });
+
         res.render('hours/dashboard', {
             title: 'Dashboard',
             hours: hours
