@@ -437,3 +437,13 @@ exports.postForgot = function (req, res, next) {
         res.redirect('/forgot');
     });
 };
+
+//Export Admin assign, export admin revoke.
+//must be an admin to do this function.
+
+exports.postUpdateAdmin = function (req, res, next) {
+    console.log('oh yea');
+
+    res.sendStatus(200);
+
+};
