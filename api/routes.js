@@ -7,6 +7,7 @@ var passportConfig = require('../config/passport');
 var csvController = require('./controllers/csv');
 var hoursController = require('./controllers/hours');
 var projectsController = require('./controllers/projects');
+var userController = require('./controllers/user');
 
 module.exports = function (app) {
     /**
@@ -29,7 +30,8 @@ module.exports = function (app) {
     /**
      * API for user accounts.
      */
-    app.post('/account/roles', passportConfig.isAuthenticated, userController.postUpdateRoles);
+    app.post('/api/account/roles', passportConfig.isAuthenticated, userController.postAPIUpdateRoles);
+    app.get('/api/account', passportConfig.isAuthenticated, userController.getAPIAccount);
 
     /**
      * OAuth authentication routes. (Sign in)

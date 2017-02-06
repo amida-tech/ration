@@ -441,7 +441,7 @@ exports.postForgot = function (req, res, next) {
 //Export Admin assign, export admin revoke.
 //must be an admin to do this function.
 
-exports.postUpdateRoles = function (req, res, next) {
+exports.postAPIUpdateRoles = function (req, res, next) {
 
     //Find request user to check admin status.
     User.findOne({
@@ -462,6 +462,24 @@ exports.postUpdateRoles = function (req, res, next) {
         } else {
             res.sendStatus(401);
         }
+    });
+
+};
+
+//Not used by front end, but good for testing/refactoring.
+exports.getAPIAccount = function (req, res) {
+
+    User.findOne({
+        email: req.user.email.toLowerCase()
+    }, function (err, user) {
+
+        var accountObject = {
+            email: user.email,
+            roles: user.roles
+        };
+
+        res.send(accountObject);
+
     });
 
 };

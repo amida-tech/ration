@@ -42,7 +42,9 @@ before(function (done) {
 describe.only('Admin Testing', function () {
 
     it('should not allow access if not logged in', function (done) {
-        api.post('/account/admin').expect(302, done);
+        api.post('/api/account/roles').end(function (err, res) {
+            done();
+        })
     });
 
     it('should register user', function (done) {
@@ -69,7 +71,7 @@ describe.only('Admin Testing', function () {
             roles: ['admin']
         };
 
-        api.post('/account/admin').send(tmpRoleUser).expect(200).end(function (err, res) {
+        api.post('/api/account/roles').send(tmpRoleUser).expect(200).end(function (err, res) {
             if (err) {
                 done(err);
             } else {
@@ -91,8 +93,8 @@ describe.only('Admin Testing', function () {
     });
 
     it('check account information for admin status', function (done) {
-        api.get('/account').end(function (err, res) {
-            console.log(res.text);
+        api.get('/api/account').end(function (err, res) {
+            (res.body.roles).should.contain('admin');
             done();
         });
     });
