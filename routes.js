@@ -30,7 +30,6 @@ module.exports = function (app) {
     app.get('/account', passportConfig.isAuthenticated, userController.getAccount);
     app.post('/account/profile', passportConfig.isAuthenticated, userController.postUpdateProfile);
     app.post('/account/password', passportConfig.isAuthenticated, userController.postUpdatePassword);
-    app.post('/account/admin', passportConfig.isAuthenticated, userController.postUpdateAdmin);
     app.post('/account/delete', passportConfig.isAuthenticated, userController.postDeleteAccount);
     app.get('/account/unlink/:provider', passportConfig.isAuthenticated, userController.getOauthUnlink);
     app.get('/dashboard', passportConfig.isAuthenticated, hoursController.dashboard);

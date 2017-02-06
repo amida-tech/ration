@@ -441,9 +441,27 @@ exports.postForgot = function (req, res, next) {
 //Export Admin assign, export admin revoke.
 //must be an admin to do this function.
 
-exports.postUpdateAdmin = function (req, res, next) {
-    console.log('oh yea');
+exports.postUpdateRoles = function (req, res, next) {
 
-    res.sendStatus(200);
+    //Find request user to check admin status.
+    User.findOne({
+        email: req.user.email.toLowerCase()
+    }, function (err, user) {
+        if (_.includes(user.roles, 'admin')) {
+            //Find user to update.
+            User.findOne({
+                email: req.body.email.toLowerCase()
+            }, function (err, updateUser) {
+                //Need to add handler if no user.
+                //and condition roles to selectable list.
+                updateUser.roles = req.body.roles;
+                updateUser.save(function (err) {
+                    res.sendStatus(200);
+                });
+            });
+        } else {
+            res.sendStatus(401);
+        }
+    });
 
 };

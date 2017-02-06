@@ -27,6 +27,11 @@ module.exports = function (app) {
     app.get('/api/csv/:num', passportConfig.isAuthenticated, csvController.getAllHoursPastWeeksCSV);
 
     /**
+     * API for user accounts.
+     */
+    app.post('/account/roles', passportConfig.isAuthenticated, userController.postUpdateRoles);
+
+    /**
      * OAuth authentication routes. (Sign in)
      */
     app.get('/auth/google', passport.authenticate('google', {
