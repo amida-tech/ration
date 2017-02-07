@@ -37,56 +37,115 @@ before(function (done) {
     });
 });
 
-describe.only('Admin Testing', function () {
+describe.only('Delegation testing', function () {
 
-    it('should not allow access if not logged in', function (done) {
-        api.post('/api/account/roles').end(function (err, res) {
-            done(err);
-        })
-    });
+    describe('admin delegates to non-admin', function () {
 
-    it('should register user', function (done) {
-        //Register endpoint returns a 302 until refactored.
-        api.post('/signup').send(tmpUser).end(function (err, res) {
-            done(err);
+        it('should not allow access if not logged in', function (done) {
+            api.post('/api/account/roles').end(function (err, res) {
+                (res.text).should.contain('login');
+                done(err);
+            })
         });
-    });
 
-    it('login admin user', function (done) {
-        api.post('/login').send(tmpAdminUser).end(function (err, res) {
-            done(err);
+        it('should register user', function (done) {
+            //Register endpoint returns a 302 until refactored.
+            api.post('/signup').send(tmpUser).expect(302).end(function (err, res) {
+                done(err);
+            });
         });
-    });
 
-    it('set roles array on other user', function (done) {
-
-        var tmpRoleUser = {
-            email: tmpUser.email,
-            roles: ['admin']
-        };
-
-        api.post('/api/account/roles').send(tmpRoleUser).expect(200).end(function (err, res) {
-            done(err);
+        it('should login admin user', function (done) {
+            api.post('/login').send(tmpAdminUser).end(function (err, res) {
+                (res.text).should.not.contain('login');
+                done(err);
+            });
         });
-    });
 
-    it('log out of admin user', function (done) {
-        api.post('/logout').end(function (err, res) {
-            done(err);
-        });
-    });
+        it('should set roles array on non-admin user', function (done) {
 
-    it('log in as basic user', function (done) {
-        api.post('/login').send(tmpUser).end(function (err, res) {
-            done(err);
-        });
-    });
+            var tmpRoleUser = {
+                email: tmpUser.email,
+                roles: ['admin']
+            };
 
-    it('check account information for admin status', function (done) {
-        api.get('/api/account').end(function (err, res) {
-            (res.body.roles).should.contain('admin');
-            done(err);
+            api.post('/api/account/roles').send(tmpRoleUser).expect(200).end(function (err, res) {
+                done(err);
+            });
         });
+
+        it('should log out of admin user', function (done) {
+            api.get('/logout').end(function (err, res) {
+                (res.text).should.contain('Found. Redirecting to /');
+                done(err);
+            });
+        });
+
+        it('should log in as non-admin (now admin) user', function (done) {
+            api.post('/login').send(tmpUser).end(function (err, res) {
+                (res.text).should.not.contain('login');
+                done(err);
+            });
+        });
+
+        it('non-admin (now admin) user should be admin', function (done) {
+            api.get('/api/account').end(function (err, res) {
+                (res.body.roles).should.contain('admin');
+                done(err);
+            });
+        });
+
+        it('should log out of admin user', function (done) {
+            api.get('/logout').end(function (err, res) {
+                (res.text).should.contain('Found. Redirecting to /');
+                done(err);
+            });
+        });
+
+        describe('admin revokes from another admin', function () {
+
+            it('should login new admin user', function (done) {
+                api.post('/login').send(tmpUser).end(function (err, res) {
+                    (res.text).should.not.contain('login');
+                    done(err);
+                });
+            });
+
+            it('should set roles array on original admin user', function (done) {
+
+                var tmpRoleUser = {
+                    email: tmpAdminUser.email,
+                    roles: []
+                };
+
+                api.post('/api/account/roles').send(tmpRoleUser).expect(200).end(function (err, res) {
+                    done(err);
+                });
+            });
+
+            it('should log out of admin user', function (done) {
+                api.get('/logout').end(function (err, res) {
+                    (res.text).should.contain('Found. Redirecting to /');
+                    done(err);
+                });
+            });
+
+            it('should log in as non-admin (revoked) user', function (done) {
+                api.post('/login').send(tmpAdminUser).end(function (err, res) {
+                    (res.text).should.not.contain('login');
+                    done(err);
+                });
+            });
+
+            it('admin (now revoked) user should not be an admin', function (done) {
+                api.get('/api/account').end(function (err, res) {
+                    (res.body.roles).should.not.contain('admin');
+                    done(err);
+                });
+            });
+
+        });
+
     });
 
 });
