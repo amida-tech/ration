@@ -81,7 +81,7 @@ describe.only('Delegation testing', function () {
 
     });
 
-    describe('admin delegates to non-existent roles', function () {
+    describe('non-admin registers and cannot delegate', function () {
 
         it('should register user', function (done) {
             //Register endpoint returns a 302 until refactored.
@@ -89,6 +89,36 @@ describe.only('Delegation testing', function () {
                 done(err);
             });
         });
+
+        it('should login new user', function (done) {
+            api.post('/login').send(tmpUser).end(function (err, res) {
+                (res.text).should.not.contain('login');
+                done(err);
+            });
+        });
+
+        it('should get unauthorized error on self-delegation', function (done) {
+
+            var tmpRoleUser = {
+                email: tmpUser.email,
+                roles: ['admin']
+            };
+
+            api.post('/api/account/roles').send(tmpRoleUser).expect(401).end(function (err, res) {
+                done(err);
+            });
+        });
+
+        it('should log out of admin user', function (done) {
+            api.get('/logout').end(function (err, res) {
+                (res.text).should.contain('Found. Redirecting to /');
+                done(err);
+            });
+        });
+
+    });
+
+    describe('admin delegates to non-existent roles', function () {
 
         it('should login admin user', function (done) {
             api.post('/login').send(tmpAdminUser).end(function (err, res) {
