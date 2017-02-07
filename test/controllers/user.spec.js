@@ -241,4 +241,46 @@ describe.only('Delegation testing', function () {
 
     });
 
+    describe('admin revokes from self', function () {
+
+        it('should login new admin user', function (done) {
+            api.post('/login').send(tmpUser).end(function (err, res) {
+                (res.text).should.not.contain('login');
+                done(err);
+            });
+        });
+
+        it('should set roles array on new admin user', function (done) {
+
+            var tmpRoleUser = {
+                email: tmpUser.email,
+                roles: []
+            };
+
+            api.post('/api/account/roles').send(tmpRoleUser).expect(200).end(function (err, res) {
+                done(err);
+            });
+        });
+
+        it('attempt at roles set should be unauthorized', function (done) {
+
+            var tmpRoleUser = {
+                email: tmpUser.email,
+                roles: []
+            };
+
+            api.post('/api/account/roles').send(tmpRoleUser).expect(401).end(function (err, res) {
+                done(err);
+            });
+        });
+
+        it('should log out of admin user', function (done) {
+            api.get('/logout').end(function (err, res) {
+                (res.text).should.contain('Found. Redirecting to /');
+                done(err);
+            });
+        });
+
+    });
+
 });
