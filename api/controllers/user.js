@@ -443,30 +443,40 @@ exports.postForgot = function (req, res, next) {
 
 exports.postAPIUpdateRoles = function (req, res, next) {
 
-    //Find request user to check admin status.
-    User.findOne({
-        email: req.user.email.toLowerCase()
-    }, function (err, user) {
-        if (_.includes(user.roles, 'admin')) {
-            //Find user to update.
-            User.findOne({
-                email: req.body.email.toLowerCase()
-            }, function (err, updateUser) {
-                //Need to add handler if no user.
-                //and condition roles to selectable list.
-                updateUser.roles = req.body.roles;
-                updateUser.save(function (err) {
-                    res.sendStatus(200);
+    //Hard-coded for now.
+    var validRoles = ['admin'];
+    var userRoles = _.intersection(validRoles, req.body.roles);
+
+    if (!req.body.email) {
+        res.sendStatus(400);
+    } else {
+        //Find request user to check admin status.
+        User.findOne({
+            email: req.user.email.toLowerCase()
+        }, function (err, user) {
+            if (_.includes(user.roles, 'admin')) {
+                //Find user to update.
+                User.findOne({
+                    email: req.body.email.toLowerCase()
+                }, function (err, updateUser) {
+                    if (!updateUser) {
+                        res.sendStatus(404);
+                    } else {
+                        updateUser.roles = userRoles;
+                        updateUser.save(function (err) {
+                            res.sendStatus(200);
+                        });
+                    }
                 });
-            });
-        } else {
-            res.sendStatus(401);
-        }
-    });
+            } else {
+                res.sendStatus(401);
+            }
+        });
+    }
 
 };
 
-//Not used by front end, but good for testing/refactoring.
+//Not used by front end, but here for when we refactor (used in testing as well).
 exports.getAPIAccount = function (req, res) {
 
     User.findOne({

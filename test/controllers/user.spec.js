@@ -39,6 +39,106 @@ before(function (done) {
 
 describe.only('Delegation testing', function () {
 
+    describe('admin delegates to non-existent user', function () {
+
+        it('should login admin user', function (done) {
+            api.post('/login').send(tmpAdminUser).end(function (err, res) {
+                (res.text).should.not.contain('login');
+                done(err);
+            });
+        });
+
+        it('should fail on non existent user', function (done) {
+
+            var tmpRoleUser = {
+                email: 'badmojo@nope.no',
+                roles: ['admin']
+            };
+
+            api.post('/api/account/roles').send(tmpRoleUser).expect(404).end(function (err, res) {
+                done(err);
+            });
+        });
+
+        it('should fail on empty email', function (done) {
+
+            var tmpRoleUser = {
+                email: '',
+                roles: ['admin']
+            };
+
+            api.post('/api/account/roles').send(tmpRoleUser).expect(400).end(function (err, res) {
+                done(err);
+            });
+        });
+
+        it('should log out of admin user', function (done) {
+            api.get('/logout').end(function (err, res) {
+                (res.text).should.contain('Found. Redirecting to /');
+                done(err);
+            });
+        });
+
+    });
+
+    describe('admin delegates to non-existent roles', function () {
+
+        it('should register user', function (done) {
+            //Register endpoint returns a 302 until refactored.
+            api.post('/signup').send(tmpUser).expect(302).end(function (err, res) {
+                done(err);
+            });
+        });
+
+        it('should login admin user', function (done) {
+            api.post('/login').send(tmpAdminUser).end(function (err, res) {
+                (res.text).should.not.contain('login');
+                done(err);
+            });
+        });
+
+        it('should assign user to no roles', function (done) {
+
+            var tmpRoleUser = {
+                email: tmpUser.email,
+                roles: ['aristocrat']
+            };
+
+            api.post('/api/account/roles').send(tmpRoleUser).expect(200).end(function (err, res) {
+                done(err);
+            });
+        });
+
+        it('should log out of admin user', function (done) {
+            api.get('/logout').end(function (err, res) {
+                (res.text).should.contain('Found. Redirecting to /');
+                done(err);
+            });
+        });
+
+        it('should log in as non-admin (now admin) user', function (done) {
+            api.post('/login').send(tmpUser).end(function (err, res) {
+                (res.text).should.not.contain('login');
+                done(err);
+            });
+        });
+
+        it('non-admin (now admin) user should be admin', function (done) {
+            api.get('/api/account').end(function (err, res) {
+                (res.body.roles).should.be.empty;
+                done(err);
+            });
+        });
+
+        it('should log out of admin user', function (done) {
+            api.get('/logout').end(function (err, res) {
+                (res.text).should.contain('Found. Redirecting to /');
+                done(err);
+            });
+        });
+
+    });
+
     describe('admin delegates to non-admin', function () {
 
         it('should not allow access if not logged in', function (done) {
@@ -46,13 +146,6 @@ describe.only('Delegation testing', function () {
                 (res.text).should.contain('login');
                 done(err);
             })
-        });
-
-        it('should register user', function (done) {
-            //Register endpoint returns a 302 until refactored.
-            api.post('/signup').send(tmpUser).expect(302).end(function (err, res) {
-                done(err);
-            });
         });
 
         it('should login admin user', function (done) {
