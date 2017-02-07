@@ -15,11 +15,12 @@ const tmpUser = {
     confirmPassword: 'asdf'
 };
 
-//Manually back out users and establish root admin user.
+//Remove users and establish root admin user.
 before(function (done) {
     User.remove({
         email: tmpUser.email
     }, function (err) {
+        if (err) return done(err);
         User.remove({
             email: tmpAdminUser.email
         }, function (err) {
@@ -30,9 +31,22 @@ before(function (done) {
                 roles: ['admin']
             });
             user.save(function (err) {
-                if (err) return done(err);
-                done();
+                done(err);
             });
+        });
+    });
+});
+
+//Remove all users when done.
+after(function (done) {
+    User.remove({
+        email: tmpUser.email
+    }, function (err) {
+        if (err) return done(err);
+        User.remove({
+            email: tmpAdminUser.email
+        }, function (err) {
+            done(err);
         });
     });
 });
