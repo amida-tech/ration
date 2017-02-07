@@ -35,5 +35,6 @@ module.exports = function (app) {
     app.get('/dashboard', passportConfig.isAuthenticated, hoursController.dashboard);
     app.get('/myhours', passportConfig.isAuthenticated, hoursController.myHours);
     app.get('/projects', passportConfig.isAuthenticated, passportConfig.isAdministrator, projectController.projects);
+    app.get('/users', passportConfig.isAuthenticated, passportConfig.isAdministrator, userController.getUsers);
     app.get('/.well-known/acme-challenge/:id', letsencryptController.challenge);
 }
