@@ -1,4 +1,4 @@
-$("tbody").sortable({
+$("#projects_table > tbody").sortable({
     items: "> tr",
     appendTo: "parent",
     helper: "clone"
