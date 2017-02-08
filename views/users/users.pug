@@ -21,9 +21,16 @@ block content
                   td.col-md-10
                     h4 #{user.profile.name || user.email || user.id}
                   td.col
-                    button.btn.btn-block.btn-info(type='submit')
-                      i.fa.fa-cog
-                      | Make Admin
-                    button.btn.btn-block.btn-danger(type='submit')
+                    if user.roles.indexOf('admin') > -1
+                      a.button.btn.btn-block.btn-warning(type='submit' data-user=user.email)#revoke_admin
+                        i.fa.fa-close
+                        | Revoke Admin
+                    else 
+                      a.button.btn.btn-block.btn-info(type='submit' data-user=user.email)#make_admin
+                        i.fa.fa-wrench
+                        | Make Admin         
+                    a.button.btn.btn-block.btn-danger(type='submit')
                       i.fa.fa-trash
                       | Remove User
+                      
+                      
