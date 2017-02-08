@@ -437,3 +437,59 @@ exports.postForgot = function (req, res, next) {
         res.redirect('/forgot');
     });
 };
+
+//Export Admin assign, export admin revoke.
+//must be an admin to do this function.
+
+exports.postAPIUpdateRoles = function (req, res, next) {
+
+    //Hard-coded for now.
+    var validRoles = ['admin'];
+    var userRoles = _.intersection(validRoles, req.body.roles);
+
+    if (!req.body.email) {
+        res.sendStatus(400);
+    } else {
+        //Find request user to check admin status.
+        User.findOne({
+            email: req.user.email.toLowerCase()
+        }, function (err, user) {
+            if (_.includes(user.roles, 'admin')) {
+                //Find user to update.
+                User.findOne({
+                    email: req.body.email.toLowerCase()
+                }, function (err, updateUser) {
+                    if (!updateUser) {
+                        res.sendStatus(404);
+                    } else {
+                        updateUser.roles = userRoles;
+                        updateUser.save(function (err) {
+                            res.sendStatus(200);
+                        });
+                    }
+                });
+            } else {
+                res.sendStatus(401);
+            }
+        });
+    }
+
+};
+
+//Not used by front end, but here for when we refactor (used in testing as well).
+exports.getAPIAccount = function (req, res) {
+
+    User.findOne({
+        email: req.user.email.toLowerCase()
+    }, function (err, user) {
+
+        var accountObject = {
+            email: user.email,
+            roles: user.roles
+        };
+
+        res.send(accountObject);
+
+    });
+
+};
