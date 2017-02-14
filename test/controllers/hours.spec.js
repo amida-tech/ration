@@ -25,6 +25,8 @@ describe('Hours Controller:', function() {
 
         it('should update hours for the current week for the logged in user');
 
+        it('should update hours for the specified week for the logged in user');
+
     });
 
 });

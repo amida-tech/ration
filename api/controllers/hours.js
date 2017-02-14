@@ -113,7 +113,7 @@ exports.getHoursCurrentWeek = function (req, res, next) {
         }
         res.send(doc);
     });
-}
+};
 
 /**
  * GET /api/hours/me/week/:num
@@ -246,4 +246,40 @@ exports.putHours = function (req, res, next) {
             });
         }
     });
-}
+};
+
+/**
+ * PUT /api/hours/me/week
+ * Update the hours entry for a specific week for the logged in user.
+ */
+exports.putHoursByWeek = function (req, res, next) {
+    Hours.findOne({
+        userId: req.user.id,
+        week: req.params.week
+    }, function (err, doc) {
+        if (err) {
+            return next(err);
+        }
+        if (!doc) {
+            doc = new Hours({
+                userId: req.user.id,
+                userName: req.user.profile.name,
+                projects: req.body.hours
+            });
+            doc.save(function (err, doc) {
+                if (err) {
+                    return next(err);
+                }
+                res.send(doc);
+            });
+        } else {
+            doc.projects = req.body.hours;
+            doc.save(function (err, doc) {
+                if (err) {
+                    return next(err);
+                }
+                res.send(doc);
+            });
+        }
+    });
+};
