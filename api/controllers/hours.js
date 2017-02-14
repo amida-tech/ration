@@ -249,12 +249,12 @@ exports.putHours = function (req, res, next) {
 };
 
 /**
- * PUT /api/hours/me/week
- * Update the hours entry for a specific week for the logged in user.
+ * PUT /api/hours/:userid/:week
+ * (ADMIN) Update the hours entry for a specific week for the specified user.
  */
-exports.putHoursByWeek = function (req, res, next) {
+exports.putHoursByUserByWeek = function (req, res, next) {
     Hours.findOne({
-        userId: req.user.id,
+        userId: req.params.userid,
         week: req.params.week
     }, function (err, doc) {
         if (err) {
@@ -264,6 +264,7 @@ exports.putHoursByWeek = function (req, res, next) {
             doc = new Hours({
                 userId: req.user.id,
                 userName: req.user.profile.name,
+                week: req.params.week,
                 projects: req.body.hours
             });
             doc.save(function (err, doc) {
