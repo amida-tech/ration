@@ -159,9 +159,6 @@ exports.isAuthenticated = function (req, res, next) {
 };
 
 /**
-<<<<<<< HEAD
- * Authorization Required middleware for tokens.
-=======
  * Role Required middleware.
  */
 exports.needsRole = function (role) {
@@ -176,8 +173,7 @@ exports.needsRole = function (role) {
 }
 
 /**
- * Authorization Required middleware.
->>>>>>> develop
+ * Authorization Required middleware for tokens..
  */
 exports.isAuthorized = function (req, res, next) {
     var provider = req.path.split('/').slice(-1)[0];
@@ -190,20 +186,3 @@ exports.isAuthorized = function (req, res, next) {
         res.redirect('/auth/' + provider);
     }
 };
-
-/**
- * Authorization Required middleware for administrators.
- */
-
-exports.isAdministrator = function (req, res, next) {
-    //Strategy returns valid user on req.
-    if (req.user.roles) {
-        if (_.indexOf(req.user.roles, 'admin') > -1) {
-            next();
-        } else {
-            res.redirect('back');
-        }
-    } else {
-        return res.redirect('back');
-    }
-}
