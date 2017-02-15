@@ -35,7 +35,8 @@ hoursSchema.index({
  */
 hoursSchema.pre('save', function (next) {
     var hours = this;
-    if (hours.isNew) {
+    //if (hours.isNew) {
+    if (hours.isNew && (typeof (hours.week) === 'undefined')) {
         hours.week = weeksSinceEpoch();
     }
     next();

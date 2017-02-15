@@ -159,6 +159,20 @@ exports.isAuthenticated = function (req, res, next) {
 };
 
 /**
+ * Role Required middleware.
+ */
+exports.needsRole = function (role) {
+    return function (req, res, next) {
+        if (req.user) {
+            if (req.user.roles.indexOf(role) > -1) {
+                return next();
+            }
+        }
+        res.send(401, 'Unauthorized');
+    }
+}
+
+/**
  * Authorization Required middleware.
  */
 exports.isAuthorized = function (req, res, next) {

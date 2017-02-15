@@ -51,7 +51,7 @@ after(function (done) {
     });
 });
 
-describe.only('Delegation testing', function () {
+describe('Delegation testing', function () {
 
     describe('admin delegates to non-existent user', function () {
 
