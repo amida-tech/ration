@@ -6,9 +6,6 @@ block content
   div.container
     div.content
       table.table.table-bordered#projects_table
-        //thead
-        //  tr
-        //    th(colspan="3") User Management
         tbody
           if users
               each user in users
@@ -20,15 +17,17 @@ block content
                       img(src=user.gravatar(60))
                   td.col-md-10
                     h4 #{user.profile.name || user.email || user.id}
+                    h5 Roles: #{user.roles}
                   td.col
-                    if user.roles.indexOf('admin') > -1
-                      a.button.btn.btn-block.btn-warning(type='submit' data-user=user.email)#revoke_admin
-                        i.fa.fa-close
-                        | Revoke Admin
-                    else 
-                      a.button.btn.btn-block.btn-info(type='submit' data-user=user.email)#make_admin
-                        i.fa.fa-wrench
-                        | Make Admin         
+                    case user.roles.indexOf('admin')
+                      when -1
+                        a.button.btn.btn-block.btn-info(type='submit' data-user=user.email).make_admin
+                          i.fa.fa-wrench
+                          | Make Admin                         
+                      default
+                        a.button.btn.btn-block.btn-warning(type='submit' data-user=user.email).revoke_admin
+                          i.fa.fa-close
+                          | Revoke Admin
                     a.button.btn.btn-block.btn-danger(type='submit')
                       i.fa.fa-trash
                       | Remove User
