@@ -492,7 +492,6 @@ exports.getAPIAccount = function (req, res) {
 
     });
 
-<<<<<<< HEAD
 };
 
 /**
@@ -513,6 +512,4 @@ exports.getUsers = function (req, res) {
 
     });
 
-=======
->>>>>>> develop
 };
