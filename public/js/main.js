@@ -67,7 +67,6 @@ $(document).ready(function () {
         e.preventDefault();
         window.location = "/api/csv/1";
     });
-<<<<<<< HEAD
 
     /**
      * Functions for User List
@@ -149,6 +148,4 @@ $(document).ready(function () {
         event.preventDefault();
     });
 
-=======
->>>>>>> develop
 });

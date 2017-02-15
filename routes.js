@@ -32,8 +32,7 @@ module.exports = function (app) {
     app.post('/account/delete', passportConfig.isAuthenticated, userController.postDeleteAccount);
     app.get('/account/unlink/:provider', passportConfig.isAuthenticated, userController.getOauthUnlink);
     app.get('/dashboard', passportConfig.isAuthenticated, hoursController.dashboard);
-    app.get('/myhours', passportConfig.isAuthenticated, hoursController.myHours); << << << < HEAD
+    app.get('/myhours', passportConfig.isAuthenticated, hoursController.myHours);
     app.get('/projects', passportConfig.isAuthenticated, passportConfig.needsRole('admin'), projectController.projects);
     app.get('/users', passportConfig.isAuthenticated, passportConfig.needsRole('admin'), userController.getUsers);
-    app.get('/.well-known/acme-challenge/:id', letsencryptController.challenge);
 }
