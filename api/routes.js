@@ -21,7 +21,7 @@ module.exports = function (app) {
     app.get('/api/hours/week/:num', passportConfig.isAuthenticated, hoursController.getAllHoursSpecificWeek);
     app.get('/api/hours/weeks/:num', passportConfig.isAuthenticated, hoursController.getAllHoursPastWeeks);
 
-    app.put('/api/projects', passportConfig.isAuthenticated, projectsController.putProjects);
+    app.put('/api/projects', passportConfig.isAuthenticated, passportConfig.needsRole('admin'), projectsController.putProjects);
 
     app.put('/api/hours/me', passportConfig.isAuthenticated, hoursController.putHours);
     app.put('/api/hours/:userid/:week', passportConfig.isAuthenticated, passportConfig.needsRole('admin'), hoursController.putHoursByUserByWeek);

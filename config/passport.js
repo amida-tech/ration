@@ -173,7 +173,7 @@ exports.needsRole = function (role) {
 }
 
 /**
- * Authorization Required middleware.
+ * Authorization Required middleware for tokens..
  */
 exports.isAuthorized = function (req, res, next) {
     var provider = req.path.split('/').slice(-1)[0];

@@ -33,5 +33,6 @@ module.exports = function (app) {
     app.get('/account/unlink/:provider', passportConfig.isAuthenticated, userController.getOauthUnlink);
     app.get('/dashboard', passportConfig.isAuthenticated, hoursController.dashboard);
     app.get('/myhours', passportConfig.isAuthenticated, hoursController.myHours);
-    app.get('/edit-projects', passportConfig.isAuthenticated, projectController.projects);
+    app.get('/projects', passportConfig.isAuthenticated, passportConfig.needsRole('admin'), projectController.projects);
+    app.get('/users', passportConfig.isAuthenticated, passportConfig.needsRole('admin'), userController.getUsers);
 }

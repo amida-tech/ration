@@ -29,13 +29,13 @@ $(document).ready(function () {
                 // check if a project name already exists
                 // in the case of a duplicate project name we only take the first
                 var result = [];
-                
+
                 if (hoursData.length > 0) {
                     result = hoursData.filter(function (data) {
                         return data.name === project;
                     });
                 }
-                
+
                 if (result.length === 0) {
                     hoursData.push({
                         name: project,
@@ -67,4 +67,5 @@ $(document).ready(function () {
         e.preventDefault();
         window.location = "/api/csv/1";
     });
+
 });

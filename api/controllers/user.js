@@ -493,3 +493,19 @@ exports.getAPIAccount = function (req, res) {
     });
 
 };
+
+/**
+ * GET /account
+ * Profile page.
+ */
+exports.getUsers = function (req, res) {
+
+    User.find({}, function (err, docs) {
+        res.render('users/users', {
+            title: 'User Management',
+            users: docs
+        });
+
+    });
+
+};

@@ -1,0 +1,35 @@
+extends ../layout
+
+block content
+  h2 Users
+  hr
+  div.container
+    div.content
+      table.table.table-bordered#projects_table
+        tbody
+          if users
+              each user in users
+                tr
+                  td.col
+                    if user.profile.picture
+                      img(src=user.profile.picture)
+                    else
+                      img(src=user.gravatar(60))
+                  td.col-md-10
+                    h4 #{user.profile.name || user.email || user.id}
+                    h5 Roles: #{user.roles}
+                  td.col
+                    case user.roles.indexOf('admin')
+                      when -1
+                        a.button.btn.btn-block.btn-info(type='submit' data-user=user.email).make_admin
+                          i.fa.fa-wrench
+                          | Make Admin                         
+                      default
+                        a.button.btn.btn-block.btn-warning(type='submit' data-user=user.email).revoke_admin
+                          i.fa.fa-close
+                          | Revoke Admin
+                    a.button.btn.btn-block.btn-danger.disabled(type='submit')
+                      i.fa.fa-trash
+                      | Remove User
+                      
+                      
