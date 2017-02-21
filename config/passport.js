@@ -168,7 +168,7 @@ exports.needsRole = function (role) {
                 return next();
             }
         }
-        res.send(401, 'Unauthorized');
+        res.sendStatus(401);
     }
 }
 

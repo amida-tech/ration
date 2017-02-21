@@ -15,6 +15,11 @@ const tmpUser = {
     confirmPassword: 'asdf'
 };
 
+const activeUser = {
+    email: 'active@active.com',
+    password: 'asdf',
+};
+
 //Remove users and establish root admin user.
 before(function (done) {
     User.remove({
@@ -30,8 +35,14 @@ before(function (done) {
                 password: tmpAdminUser.password,
                 roles: ['admin']
             });
+            var tmpActiveUser = new User({
+                email: activeUser.email,
+                password: activeUser.password
+            });
             user.save(function (err) {
-                done(err);
+                tmpActiveUser.save(function(err) {
+                    done(err);
+                });
             });
         });
     });
@@ -39,16 +50,35 @@ before(function (done) {
 
 //Remove all users when done.
 after(function (done) {
-    User.remove({
-        email: tmpUser.email
-    }, function (err) {
-        if (err) return done(err);
-        User.remove({
-            email: tmpAdminUser.email
-        }, function (err) {
+    User.remove({}, function(err) {
+        done(err);
+    });
+});
+
+describe('Deactivation testing', function() {
+
+    it('should login admin user', function (done) {
+        api.post('/login').send(tmpAdminUser).end(function (err, res) {
+            (res.text).should.not.contain('login');
             done(err);
         });
     });
+
+    it('deactivates a user', function (done) {
+        api.post('/api/account/deactivate').send(activeUser).expect(200).end(function (err, res) {
+            done(err);
+        });
+    });
+
+    it('ensures that user has been deactivated', function (done) {
+        User.findOne({
+            email: activeUser.email
+        }, function (err, user) {
+            (user.inactive).should.equal(true);
+            done(err);
+        });
+    });
+
 });
 
 describe('Delegation testing', function () {
@@ -324,7 +354,5 @@ describe('Delegation testing', function () {
                 done(err);
             });
         });
-
     });
-
 });

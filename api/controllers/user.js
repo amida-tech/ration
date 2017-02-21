@@ -440,7 +440,8 @@ exports.postForgot = function (req, res, next) {
 
 //Export Admin assign, export admin revoke.
 //must be an admin to do this function.
-
+// FIXME doesn't need the admin check,
+// middleware will do this.
 exports.postAPIUpdateRoles = function (req, res, next) {
 
     //Hard-coded for now.
@@ -474,6 +475,21 @@ exports.postAPIUpdateRoles = function (req, res, next) {
         });
     }
 
+};
+
+exports.postDeactivateUser = function (req, res, next) {
+    User.findOne({
+        email: req.body.email.toLowerCase()
+    }, function (err, deactivateUser) {
+        if (!deactivateUser) {
+            res.sendStatus(404);
+        } else {
+            deactivateUser.inactive = true;
+            deactivateUser.save(function (err) {
+                res.sendStatus(200);
+            });
+        }
+    });
 };
 
 //Not used by front end, but here for when we refactor (used in testing as well).

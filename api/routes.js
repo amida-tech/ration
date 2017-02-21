@@ -31,8 +31,9 @@ module.exports = function (app) {
     /**
      * API for user accounts.
      */
-    app.post('/api/account/roles', passportConfig.isAuthenticated, userController.postAPIUpdateRoles);
     app.get('/api/account', passportConfig.isAuthenticated, userController.getAPIAccount);
+    app.post('/api/account/roles', passportConfig.isAuthenticated, userController.postAPIUpdateRoles);
+    app.post('/api/account/deactivate', passportConfig.isAuthenticated, passportConfig.needsRole('admin'), userController.postDeactivateUser);
 
     /**
      * OAuth authentication routes. (Sign in)
