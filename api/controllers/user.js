@@ -516,7 +516,7 @@ exports.getAPIAccount = function (req, res) {
  */
 exports.getUsers = function (req, res) {
 
-    User.find({}, function (err, docs) {
+    User.find({ inactive: { $ne: true }}, function (err, docs) {
         res.render('users/users', {
             title: 'User Management',
             users: docs

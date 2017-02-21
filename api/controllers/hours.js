@@ -23,19 +23,30 @@ exports.dashboard = function (req, res, next) {
         var allData = _.groupBy(docs, 'userName');
         var hours = [];
         _.forOwn(allData, function (value, key) {
-            var temp = {
-                name: key,
-                data: _.sortBy(value, 'week'),
-                projects: []
-            };
-            _.forEach(value, function (val) {
-                _.forEach(val.projects, function (project) {
-                    if (temp.projects.indexOf(project.name) < 0) {
-                        temp.projects.push(project.name);
-                    }
+            // look up related user to ensure they are active
+            User.findById(value[0].userId, function (err, user) {
+                if (err) {
+                    return next(err);
+                } else if (user === null) {
+                    return;
+                } else if (user.inactive) {
+                    return;
+                }
+                var temp = {
+                    name: key,
+                    data: _.sortBy(value, 'week'),
+                    projects: []
+                };
+                _.forEach(value, function (val) {
+                    _.forEach(val.projects, function (project) {
+                        if (temp.projects.indexOf(project.name) < 0) {
+                            temp.projects.push(project.name);
+                        }
+                    });
                 });
+                hours.push(temp);
             });
-            hours.push(temp);
+            
         });
 
         res.render('hours/dashboard', {
