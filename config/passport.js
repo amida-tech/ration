@@ -111,6 +111,12 @@ passport.use(new GoogleStrategy({
             google: profile.id
         }, function (err, existingUser) {
             if (existingUser) {
+                if (existingUser.inactive) {
+                    req.flash('errors', {
+                        msg: 'User ' + existingUser.email + ' has been marked inactive.'
+                    });
+                    return done(err);
+                }
                 return done(null, existingUser);
             }
             User.findOne({
