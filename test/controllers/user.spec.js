@@ -40,7 +40,7 @@ before(function (done) {
                 password: activeUser.password
             });
             user.save(function (err) {
-                tmpActiveUser.save(function(err) {
+                tmpActiveUser.save(function (err) {
                     done(err);
                 });
             });
@@ -50,12 +50,12 @@ before(function (done) {
 
 //Remove all users when done.
 after(function (done) {
-    User.remove({}, function(err) {
+    User.remove({}, function (err) {
         done(err);
     });
 });
 
-describe('Deactivation testing', function() {
+describe('Deactivation testing', function () {
 
     it('should login admin user', function (done) {
         api.post('/login').send(tmpAdminUser).end(function (err, res) {
@@ -77,6 +77,14 @@ describe('Deactivation testing', function() {
             (user.inactive).should.equal(true);
             done(err);
         });
+    });
+
+    it('ensures deactivated user cannot login', function (done) {
+        api.post('/login').send(activeUser).end(function (err, res) {
+            (res.text).should.contain('login');
+            done(err);
+        });
+
     });
 
 });
@@ -355,4 +363,5 @@ describe('Delegation testing', function () {
             });
         });
     });
+
 });

@@ -23,6 +23,7 @@ passport.deserializeUser(function (id, done) {
 /**
  * Sign in using Email and Password.
  */
+
 passport.use(new LocalStrategy({
     usernameField: 'email'
 }, function (email, password, done) {
@@ -34,6 +35,13 @@ passport.use(new LocalStrategy({
                 msg: 'Email ' + email + ' not found.'
             });
         }
+
+        if (user.inactive) {
+            return done(null, false, {
+                msg: 'User ' + email + ' has been marked inactive.'
+            });
+        }
+
         user.comparePassword(password, function (err, isMatch) {
             if (isMatch) {
                 return done(null, user);
