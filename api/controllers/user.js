@@ -486,6 +486,9 @@ exports.postDeactivateUser = function (req, res, next) {
         } else {
             deactivateUser.inactive = true;
             deactivateUser.save(function (err) {
+                if (req.user.email.toLowerCase() === req.body.email.toLowerCase()) {
+                    req.logout()
+                }
                 res.sendStatus(200);
             });
         }
@@ -501,6 +504,9 @@ exports.postDeleteUser = function (req, res, next) {
             res.sendStatus(404);
         } else {
             deleteUser.remove(function (err) {
+                if (req.user.email.toLowerCase() === req.body.email.toLowerCase()) {
+                    req.logout()
+                }
                 res.sendStatus(200);
             });
         }

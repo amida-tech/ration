@@ -103,7 +103,7 @@ describe('Deactivation testing', function () {
 
 });
 
-describe('Delete testing', function () {
+describe.only('Delete testing', function () {
 
     //Restore delete user when done.
     after(function (done) {
