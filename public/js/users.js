@@ -1,6 +1,6 @@
 /**
-* Functions for User List
-*/
+ * Functions for User List
+ */
 
 $(".make_admin").click(function (e) {
     e.preventDefault();
@@ -43,6 +43,22 @@ $(".deactivate_user").click(function (e) {
     $.ajax({
         type: 'POST',
         url: '/api/account/deactivate',
+        data: {
+            email: activeUser
+        },
+        success: function (data, status) {
+            window.location.href = '/users';
+        }
+    });
+});
+
+$(".delete_user").click(function (e) {
+    e.preventDefault();
+    var activeUser = $(this).attr('data-user');
+    console.log('deleting ' + activeUser);
+    $.ajax({
+        type: 'POST',
+        url: '/api/account/delete',
         data: {
             email: activeUser
         },
