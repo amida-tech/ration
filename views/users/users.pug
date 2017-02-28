@@ -9,28 +9,45 @@ block content
         tbody
           if users
               each user in users
-                tr
-                  td.col
+                div.panel.panel-default
+                  div.panel-body
                     if user.profile.picture
                       img(src=user.profile.picture)
                     else
                       img(src=user.gravatar(60))
-                  td.col-md-1
-                    h4 #{user.profile.name || user.email || user.id}
-                    h5 Roles: #{user.roles}
-                  td.col-md-10
-                    div.list-group
-                      a.list-group-item.admin_one
-                        h4 Revoke Administrator Rights
-                        p No one needs these!  
-                      div.list-group-item.admin_two(style="display:none;")
-                        h4 Revoke Administrator Rights for #{user.profile.name}?
-                        a.button.btn.btn-danger.confirm
-                          | Revoke
-                        a.button.btn.btn-default.cancel
-                          | Cancel
+                    div.row
+                      h4 #{user.profile.name || user.email || user.id}
+                      h5 Roles: #{user.roles}
+                    div.row
+                      div.list-group.col-md-10.col-md-offset-1
+                        a.list-group-item.admin_one
+                          h4 Revoke Administrator Rights
+                          p No one needs these!  
+                        div.list-group-item.admin_two(style="display:none;")
+                            h4 Revoke Administrator Rights for #{user.profile.name}?
+                            a.button.btn.btn-danger.confirm
+                              | Revoke
+                            a.button.btn.btn-default.cancel
+                              | Cancel
+                        a.list-group-item.deactivate_one
+                          h4 Deactivate User
+                          p Get rid of this guy!
+                        div.list-group-item.deactivate_two(style="display:none;")
+                            h4 Deactivate User #{user.profile.name}?
+                            a.button.btn.btn-danger.confirm
+                              | Revoke
+                            a.button.btn.btn-default.cancel
+                              | Cancel
+                        a.list-group-item.delete_one
+                          h4 Permanently Delete User
+                          p Get rid of this guy forever!
+                        div.list-group-item.delete_two(style="display:none;")
+                            h4 Delete User #{user.profile.name}?
+                            a.button.btn.btn-danger.confirm
+                              | Revoke
+                            a.button.btn.btn-default.cancel
+                              | Cancel
 
-                    
                     
                       
                       

@@ -87,3 +87,44 @@ $(".admin_two > .cancel").click(function () {
         }, 250);
     });
 });
+
+$(".deactivate_one").click(function () {
+    $(this).hide("slide", {
+        direction: "left"
+    }, 250, function () {
+        $(".deactivate_two").show("slide", {
+            direction: "right"
+        }, 250);
+    });
+});
+
+$(".deactivate_two > .cancel").click(function () {
+    $(this).parent().hide("slide", {
+        direction: "right"
+    }, 250, function () {
+        $(".deactivate_one").show("slide", {
+            direction: "left"
+        }, 250);
+    });
+});
+
+$(".delete_one").click(function () {
+    console.log(this);
+    $(this).hide("slide", {
+        direction: "left"
+    }, 250, function () {
+        $(".delete_two").show("slide", {
+            direction: "right"
+        }, 250);
+    });
+});
+
+$(".delete_two > .cancel").click(function () {
+    $(this).parent().hide("slide", {
+        direction: "right"
+    }, 250, function () {
+        $(".delete_one").show("slide", {
+            direction: "left"
+        }, 250);
+    });
+});
