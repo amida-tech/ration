@@ -15,6 +15,11 @@ var userSchema = new mongoose.Schema({
     tokens: Array,
     roles: Array,
 
+    inactive: {
+        type: Boolean,
+        default: false
+    },
+
     profile: {
         name: {
             type: String,
