@@ -67,3 +67,23 @@ $(".delete_user").click(function (e) {
         }
     });
 });
+
+$(".admin_one").click(function () {
+    $(this).hide("slide", {
+        direction: "left"
+    }, 250, function () {
+        $(".admin_two").show("slide", {
+            direction: "right"
+        }, 250);
+    });
+});
+
+$(".admin_two > .cancel").click(function () {
+    $(this).parent().hide("slide", {
+        direction: "right"
+    }, 250, function () {
+        $(".admin_one").show("slide", {
+            direction: "left"
+        }, 250);
+    });
+});

@@ -15,10 +15,34 @@ block content
                       img(src=user.profile.picture)
                     else
                       img(src=user.gravatar(60))
-                  td.col-md-10
+                  td.col-md-1
                     h4 #{user.profile.name || user.email || user.id}
                     h5 Roles: #{user.roles}
-                  td.col
+                  td.col-md-10
+                    div.list-group
+                      a.list-group-item.admin_one
+                        h4 Revoke Administrator Rights
+                        p No one needs these!  
+                      div.list-group-item.admin_two(style="display:none;")
+                        h4 Revoke Administrator Rights for #{user.profile.name}?
+                        a.button.btn.btn-danger.confirm
+                          | Revoke
+                        a.button.btn.btn-default.cancel
+                          | Cancel
+
+                    
+                    
+                      
+                      
+                    
+                    
+                
+    
+                      
+                      
+                      
+                  
+                  
                     case user.roles.indexOf('admin')
                       when -1
                         a.button.btn.btn-block.btn-info(type='submit' data-user=user.email).make_admin
@@ -33,13 +57,6 @@ block content
                       | Deactivate
                     a.button.btn.btn-block.btn-danger(type='submit' data-user=user.email data-toggle='modal' data-target='.delete-user-modal')
                       i.fa.fa-times-circle-o
-                      | Delete                      
-              div.modal.fade.delete-user-modal(tabindex='-1' role='dialog' arai-labelledby='Delete User Confirmation')
-                div.modal-dialog.modal-sm(role='document')
-                  div.modal-content
-                    div.modal-header
-                      h5 Remove User "#{user.profile.name}" from Ration?
-                    div.modal-footer
-                      a.button.btn.btn-danger(type='submit' data-user=user.email).delete_user Delete User
-                      a.button.btn.btn-default(data-dismiss='modal') Cancel
+                      | Delete                     
+                  
 
