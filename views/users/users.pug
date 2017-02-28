@@ -9,53 +9,52 @@ block content
         tbody
           if users
               each user in users
-                div.panel.panel-default.col-md-3
-                  div.panel-body
-                    if user.profile.picture
-                      img.img-responsive(src=user.profile.picture style="margin: 0 auto;")
-                    else
-                      img.img-responsive(src=user.gravatar(60) style="margin: 0 auto;")
-                    div.row
-                      h4.text-center #{user.profile.name || user.email || user.id}
-                      h5.text-center #{user.roles || "user"}
-                    div.row
-                      div.list-group
-                        case user.roles.indexOf('admin')
-                          when -1
-                            a.list-group-item.admin_one
-                              h4 Grant Administrator Rights
-                              p No one needs these!  
-                            div.list-group-item.admin_two(style="display:none;")
-                                h4 Grant Administrator Rights to #{user.profile.name}?
-                                a.button.btn.btn-danger.confirm.make_admin(type='submit' data-user=user.email).make_admin
-                                  | Grant
+                div.col-md-3
+                    div.panel.panel-default
+                      div.panel-heading
+                      div.panel-body
+                        if user.profile.picture
+                          img.img-responsive(src=user.profile.picture style="margin: 0 auto;")
+                        else
+                          img.img-responsive(src=user.gravatar(60) style="margin: 0 auto;")
+                        div.row
+                          h4.text-center #{user.profile.name || user.email || user.id}
+                          h5.text-center #{user.roles || "user"}
+                        div.row
+                          div.list-group.col-md-11.col-md-offset-1
+                            case user.roles.indexOf('admin')
+                              when -1
+                                a.list-group-item.admin_one
+                                  h5 Grant Administrator Rights
+                                  p No one needs these!  
+                                div.list-group-item.admin_two(style="display:none;")
+                                    h5 Grant Administrator Rights?
+                                    a.button.btn.btn-danger.confirm.make_admin(type='submit' data-user=user.email).make_admin
+                                      | Grant
+                                    a.button.btn.btn-default.cancel
+                                      | Cancel
+                              default
+                                a.list-group-item.admin_one
+                                  h5 Revoke Administrator Status 
+                                div.list-group-item.admin_two(style="display:none;")
+                                    h5 Revoke Admin Status?
+                                    a.button.btn.btn-danger.confirm(type='submit' data-user=user.email).revoke_admin
+                                      | Revoke
+                                    a.button.btn.btn-default.cancel
+                                      | Cancel      
+                            a.list-group-item.deactivate_one
+                              h5 Deactivate User
+                            div.list-group-item.deactivate_two(style="display:none;")
+                                h5 Deactivate User?
+                                a.button.btn.btn-danger.confirm(type='submit' data-user=user.email).deactivate_user
+                                  | Deactivate
                                 a.button.btn.btn-default.cancel
                                   | Cancel
-                          default
-                            a.list-group-item.admin_one
-                              h4 Revoke Administrator Rights
-                              p No one needs these!  
-                            div.list-group-item.admin_two(style="display:none;")
-                                h4 Revoke Administrator Rights from #{user.profile.name}?
-                                a.button.btn.btn-danger.confirm(type='submit' data-user=user.email).revoke_admin
-                                  | Revoke
+                            a.list-group-item.delete_one
+                              h5 Permanently Delete User
+                            div.list-group-item.delete_two(style="display:none;")
+                                h5 Delete User?
+                                a.button.btn.btn-danger.confirm(type='submit' data-user=user.email).delete_user
+                                  | Delete
                                 a.button.btn.btn-default.cancel
-                                  | Cancel      
-                        a.list-group-item.deactivate_one
-                          h4 Deactivate User
-                          p Get rid of this guy!
-                        div.list-group-item.deactivate_two(style="display:none;")
-                            h4 Deactivate User #{user.profile.name}?
-                            a.button.btn.btn-danger.confirm(type='submit' data-user=user.email).deactivate_user
-                              | Revoke
-                            a.button.btn.btn-default.cancel
-                              | Cancel
-                        a.list-group-item.delete_one
-                          h4 Permanently Delete User
-                          p Get rid of this guy forever!
-                        div.list-group-item.delete_two(style="display:none;")
-                            h4 Delete User #{user.profile.name}?
-                            a.button.btn.btn-danger.confirm(type='submit' data-user=user.email).delete_user
-                              | Revoke
-                            a.button.btn.btn-default.cancel
-                              | Cancel
+                                  | Cancel
