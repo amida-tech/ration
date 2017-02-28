@@ -24,9 +24,8 @@ block content
                           div.list-group.col-md-11.col-md-offset-1
                             case user.roles.indexOf('admin')
                               when -1
-                                a.list-group-item.admin_one
+                                a.list-group-item.admin_one(style="cursor: pointer;")
                                   h5 Grant Administrator Rights
-                                  p No one needs these!  
                                 div.list-group-item.admin_two(style="display:none;")
                                     h5 Grant Administrator Rights?
                                     a.button.btn.btn-danger.confirm.make_admin(type='submit' data-user=user.email).make_admin
@@ -34,7 +33,7 @@ block content
                                     a.button.btn.btn-default.cancel
                                       | Cancel
                               default
-                                a.list-group-item.admin_one
+                                a.list-group-item.admin_one(style="cursor: pointer;")
                                   h5 Revoke Administrator Status 
                                 div.list-group-item.admin_two(style="display:none;")
                                     h5 Revoke Admin Status?
@@ -42,7 +41,7 @@ block content
                                       | Revoke
                                     a.button.btn.btn-default.cancel
                                       | Cancel      
-                            a.list-group-item.deactivate_one
+                            a.list-group-item.deactivate_one(style="cursor: pointer;")
                               h5 Deactivate User
                             div.list-group-item.deactivate_two(style="display:none;")
                                 h5 Deactivate User?
@@ -50,7 +49,7 @@ block content
                                   | Deactivate
                                 a.button.btn.btn-default.cancel
                                   | Cancel
-                            a.list-group-item.delete_one
+                            a.list-group-item.delete_one(style="cursor: pointer;")
                               h5 Permanently Delete User
                             div.list-group-item.delete_two(style="display:none;")
                                 h5 Delete User?
