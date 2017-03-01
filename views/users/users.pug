@@ -16,7 +16,7 @@ block content
                         if user.profile.picture
                           img.img-responsive.img-circle(src=user.profile.picture style="margin: 0 auto;")
                         else
-                          img.img-responsive(src=user.gravatar(60) style="margin: 0 auto;")
+                          img.img-responsive.img-circle(src=user.gravatar(50) style="margin: 0 auto;")
                         div.row
                           h4.text-center #{user.profile.name || user.email || user.id}
                           if user.roles.length > 0
