@@ -5,13 +5,13 @@ block content
   hr
   div.container
     div.content
-      table.table.table-bordered#projects_table
+      table.table.table-bordered#users_table
         tbody
           if users
               each user in users
                 div.col-md-3
                     div.panel.panel-default
-                      div.panel-heading
+                      div.panel-heading.draggable
                       div.panel-body
                         if user.profile.picture
                           img.img-responsive.img-circle(src=user.profile.picture style="margin: 0 auto;")
@@ -19,7 +19,10 @@ block content
                           img.img-responsive(src=user.gravatar(60) style="margin: 0 auto;")
                         div.row
                           h4.text-center #{user.profile.name || user.email || user.id}
-                          h5.text-center #{user.roles || "user"}
+                          if user.roles.length > 0
+                            h5.text-center #{user.roles}
+                          else
+                            h5.text-center user
                         div.row
                           div.list-group.col-md-11.col-md-offset-1
                             case user.roles.indexOf('admin')
