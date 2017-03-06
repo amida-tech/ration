@@ -72,7 +72,7 @@ $(".admin_one").click(function () {
     $(this).hide("slide", {
         direction: "left"
     }, 250, function () {
-        $(".admin_two").show("slide", {
+        $(this).next(".admin_two").show("slide", {
             direction: "right"
         }, 250);
     });
@@ -82,7 +82,7 @@ $(".admin_two > .cancel").click(function () {
     $(this).parent().hide("slide", {
         direction: "right"
     }, 250, function () {
-        $(".admin_one").show("slide", {
+        $(this).parent(".admin").children(".admin_one").show("slide", {
             direction: "left"
         }, 250);
     });
@@ -92,7 +92,7 @@ $(".deactivate_one").click(function () {
     $(this).hide("slide", {
         direction: "left"
     }, 250, function () {
-        $(".deactivate_two").show("slide", {
+        $(this).next(".deactivate_two").show("slide", {
             direction: "right"
         }, 250);
     });
@@ -102,7 +102,7 @@ $(".deactivate_two > .cancel").click(function () {
     $(this).parent().hide("slide", {
         direction: "right"
     }, 250, function () {
-        $(".deactivate_one").show("slide", {
+        $(this).parent(".deactivate").children(".deactivate_one").show("slide", {
             direction: "left"
         }, 250);
     });
@@ -113,7 +113,7 @@ $(".delete_one").click(function () {
     $(this).hide("slide", {
         direction: "left"
     }, 250, function () {
-        $(".delete_two").show("slide", {
+        $(this).next(".delete_two").show("slide", {
             direction: "right"
         }, 250);
     });
@@ -123,7 +123,7 @@ $(".delete_two > .cancel").click(function () {
     $(this).parent().hide("slide", {
         direction: "right"
     }, 250, function () {
-        $(".delete_one").show("slide", {
+        $(this).parent(".delete").children(".delete_one").show("slide", {
             direction: "left"
         }, 250);
     });

@@ -25,6 +25,7 @@ block content
                             h5.text-center user
                         div.row
                           div.list-group.col-md-11.col-md-offset-1
+                            div.admin
                             case user.roles.indexOf('admin')
                               when -1
                                 a.list-group-item.admin_one(style="cursor: pointer;")
@@ -40,23 +41,25 @@ block content
                                   h5 Revoke Administrator Status 
                                 div.list-group-item.admin_two(style="display:none;")
                                     h5 Revoke Admin Status?
-                                    a.button.btn.btn-danger.confirm(type='submit' data-user=user.email).revoke_admin
+                                    a.button.btn.btn-danger.btn-block.btn-sm.confirm(type='submit' data-user=user.email).revoke_admin
                                       | Revoke
-                                    a.button.btn.btn-default.cancel
-                                      | Cancel      
-                            a.list-group-item.deactivate_one(style="cursor: pointer;")
-                              h5 Deactivate User
-                            div.list-group-item.deactivate_two(style="display:none;")
-                                h5 Deactivate User?
-                                a.button.btn.btn-danger.confirm(type='submit' data-user=user.email).deactivate_user
-                                  | Deactivate
-                                a.button.btn.btn-default.cancel
-                                  | Cancel
-                            a.list-group-item.delete_one(style="cursor: pointer;")
-                              h5 Permanently Delete User
-                            div.list-group-item.delete_two(style="display:none;")
-                                h5 Delete User?
-                                a.button.btn.btn-danger.confirm(type='submit' data-user=user.email).delete_user
-                                  | Delete
-                                a.button.btn.btn-default.cancel
-                                  | Cancel
+                                    a.button.btn.btn-default.btn-block.btn-sm.cancel
+                                      | Cancel  
+                            div.deactivate
+                                a.list-group-item.deactivate_one(style="cursor: pointer;")
+                                  h5 Deactivate User
+                                div.list-group-item.deactivate_two(style="display:none;")
+                                    h5 Deactivate User?
+                                    a.button.btn.btn-danger.btn-block.btn-sm.confirm(type='submit' data-user=user.email).deactivate_user
+                                      | Deactivate
+                                    a.button.btn.btn-default.btn-block.btn-sm.cancel
+                                      | Cancel
+                            div.delete
+                                a.list-group-item.delete_one(style="cursor: pointer;")
+                                  h5 Permanently Delete User
+                                div.list-group-item.delete_two(style="display:none;")
+                                    h5 Delete User?
+                                    a.button.btn.btn-danger.btn-block.btn-sm.confirm(type='submit' data-user=user.email).delete_user
+                                      | Delete
+                                    a.button.btn.btn-default.btn-block.btn-sm.cancel
+                                      | Cancel
