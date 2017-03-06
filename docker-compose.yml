@@ -4,10 +4,17 @@ services:
   web:
     build: .
     volumes:
-      - ./:/app
+      - ./api:/app/api
+      - ./config:/app/config
+      - ./lib:/app/lib
+      - ./models:/app/models
+      - ./public:/app/public
+      - ./views:/app/views
     links:
-      - mongo
-  mongo:
+      - mongodb
+    ports:
+      - "3000:3000"
+  mongodb:
     image: mongo:3.2
     ports:
       - "27017:27017"

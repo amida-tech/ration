@@ -3,8 +3,8 @@ FROM node:boron
 RUN mkdir /app
 WORKDIR /app
 
-COPY package.json /app
-COPY .env.docker /app/.env
+COPY package.json ./
+COPY .env.docker .env
 RUN npm install
 
 COPY . /app
