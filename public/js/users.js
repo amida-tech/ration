@@ -1,3 +1,10 @@
+$("#users_table").sortable({
+    items: ".draggable",
+    handle: ".handle",
+    appendTo: "parent",
+    helper: "clone"
+}).disableSelection();
+
 /**
  * Functions for User List
  */

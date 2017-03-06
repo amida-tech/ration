@@ -4,14 +4,12 @@ block content
   h2 Users
   hr
   div.container
-    div.content
-      table.table.table-bordered#users_table
-        tbody
+    div.content#users_table
           if users
               each user in users
-                div.col-md-3
+                div.col-md-3.draggable
                     div.panel.panel-default
-                      div.panel-heading.draggable
+                      div.panel-heading.handle
                       div.panel-body
                         if user.profile.picture
                           img.img-responsive.img-circle(src=user.profile.picture style="margin: 0 auto;")
