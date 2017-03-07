@@ -28,7 +28,7 @@ block content
                                 div.admin
                                     a.list-group-item.admin_one(style="cursor: pointer;")
                                       h5 Grant Administrator Rights
-                                    div.list-group-item.admin_two(style="display:none;")
+                                    div.list-group-item.admin_two.first-child(style="display:none;")
                                         h5 Grant Administrator Rights?
                                         a.button.btn.btn-success.btn-block.btn-sm.confirm.make_admin(type='submit' data-user=user.email).make_admin
                                           | Grant
@@ -38,25 +38,25 @@ block content
                                 div.admin
                                     a.list-group-item.admin_one(style="cursor: pointer;")
                                       h5 Revoke Administrator Status 
-                                    div.list-group-item.admin_two(style="display:none;")
+                                    div.list-group-item.admin_two.first-child(style="display:none;")
                                         h5 Revoke Admin Status?
                                         a.button.btn.btn-danger.btn-block.btn-sm.confirm(type='submit' data-user=user.email).revoke_admin
                                           | Revoke
                                         a.button.btn.btn-default.btn-block.btn-sm.cancel
                                           | Cancel  
                             div.deactivate
-                                a.list-group-item.deactivate_one(style="cursor: pointer;")
+                                a.list-group-item.middle-child.deactivate_one(style="cursor: pointer;")
                                   h5 Deactivate User
-                                div.list-group-item.deactivate_two(style="display:none;")
+                                div.list-group-item.middle-child.deactivate_two(style="display:none;")
                                     h5 Deactivate User?
                                     a.button.btn.btn-danger.btn-block.btn-sm.confirm(type='submit' data-user=user.email).deactivate_user
                                       | Deactivate
                                     a.button.btn.btn-default.btn-block.btn-sm.cancel
                                       | Cancel
                             div.delete
-                                a.list-group-item.delete_one(style="cursor: pointer;")
+                                a.list-group-item.last-child.delete_one(style="cursor: pointer;")
                                   h5 Permanently Delete User
-                                div.list-group-item.delete_two(style="display:none;")
+                                div.list-group-item.last-child.delete_two(style="display:none;")
                                     h5 Delete User?
                                     a.button.btn.btn-danger.btn-block.btn-sm.confirm(type='submit' data-user=user.email).delete_user
                                       | Delete
