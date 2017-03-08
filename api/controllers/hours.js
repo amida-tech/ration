@@ -22,15 +22,16 @@ exports.dashboard = function (req, res, next) {
         }
         var allData = _.groupBy(docs, 'userName');
         var hours = [];
-        _.forOwn(allData, function (value, key) {
+
+        async.eachOfSeries(allData, function(value, key, cb){
             // look up related user to ensure they are active
             User.findById(value[0].userId, function (err, user) {
                 if (err) {
-                    return next(err);
+                    return cb(err);
                 } else if (user === null) {
-                    return;
+                    return cb();
                 } else if (user.inactive) {
-                    return;
+                    return cb();
                 }
                 var temp = {
                     name: key,
@@ -45,13 +46,14 @@ exports.dashboard = function (req, res, next) {
                     });
                 });
                 hours.push(temp);
+                cb();
             });
-            
-        });
-
-        res.render('hours/dashboard', {
-            title: 'Dashboard',
-            hours: hours
+        }, function(err) {
+            if (err) return next(err);
+            res.render('hours/dashboard', {
+                title: 'Dashboard',
+                hours: hours
+            });
         });
     });
 };
