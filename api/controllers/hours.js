@@ -20,7 +20,7 @@ exports.dashboard = function (req, res, next) {
         if (err) {
             return next(err);
         }
-        var allData = _.groupBy(docs, 'userId');
+        var allData = _.groupBy(docs, 'userName');
         var hours = [];
 
         async.eachOfSeries(allData, function(value, key, cb){
