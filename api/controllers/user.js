@@ -486,10 +486,32 @@ exports.postDeactivateUser = function (req, res, next) {
         } else {
             deactivateUser.inactive = true;
             deactivateUser.save(function (err) {
+                if (req.user.email.toLowerCase() === req.body.email.toLowerCase()) {
+                    req.logout();
+                }
                 res.sendStatus(200);
             });
         }
     });
+};
+
+//Add conditional logout.
+exports.postDeleteUser = function (req, res, next) {
+    User.findOne({
+        email: req.body.email.toLowerCase()
+    }, function (err, deleteUser) {
+        if (!deleteUser) {
+            res.sendStatus(404);
+        } else {
+            deleteUser.remove(function (err) {
+                if (req.user.email.toLowerCase() === req.body.email.toLowerCase()) {
+                    req.logout();
+                }
+                res.sendStatus(200);
+            });
+        }
+    });
+
 };
 
 //Not used by front end, but here for when we refactor (used in testing as well).
@@ -516,7 +538,11 @@ exports.getAPIAccount = function (req, res) {
  */
 exports.getUsers = function (req, res) {
 
-    User.find({ inactive: { $ne: true }}, function (err, docs) {
+    User.find({
+        inactive: {
+            $ne: true
+        }
+    }, function (err, docs) {
         res.render('users/users', {
             title: 'User Management',
             users: docs

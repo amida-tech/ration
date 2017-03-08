@@ -50,13 +50,13 @@ before(function (done) {
 after(function (done) {
     Hours.remove({}, function (err) {
         if (err) return done(err);
-            User.remove({
-                email: tmpAdminUser.email
-            }, function (err) {
-                done(err);
-            });
+        User.remove({
+            email: tmpAdminUser.email
+        }, function (err) {
+            done(err);
         });
     });
+});
 
 describe('Hours Controller:', function () {
 
@@ -86,14 +86,18 @@ describe('Hours Controller:', function () {
         });
 
         it('update hours for the current week for the logged in user', function (done) {
-            api.put('/api/hours/me').send({ hours: hours1 }).expect(200).end(function (err, res) {
+            api.put('/api/hours/me').send({
+                hours: hours1
+            }).expect(200).end(function (err, res) {
                 done(err);
             });
         });
 
         it('should update hours for the specified week for the specified user when admin', function (done) {
             const uri = '/api/hours/' + tmpAdminUserId + '/1000';
-            api.put(uri).send({hours: hours2}).expect(200).end(function(err, res) {
+            api.put(uri).send({
+                hours: hours2
+            }).expect(200).end(function (err, res) {
                 done(err);
             });
         });
