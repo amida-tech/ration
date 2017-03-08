@@ -57,6 +57,21 @@ after(function (done) {
 
 describe('Deactivation testing', function () {
 
+    //Delete user and re-add to reactivate.
+    after(function (done) {
+        User.remove({
+            email: activeUser.email
+        }, function (err) {
+            var tmpActiveUser = new User({
+                email: activeUser.email,
+                password: activeUser.password
+            });
+            tmpActiveUser.save(function (err) {
+                done(err);
+            });
+        });
+    });
+
     it('should login admin user', function (done) {
         api.post('/login').send(tmpAdminUser).end(function (err, res) {
             (res.text).should.not.contain('login');
@@ -84,7 +99,77 @@ describe('Deactivation testing', function () {
             (res.text).should.contain('login');
             done(err);
         });
+    });
 
+});
+
+describe('Delete testing', function () {
+
+    //Restore delete user when done.
+    after(function (done) {
+        var tmpActiveUser = new User({
+            email: activeUser.email,
+            password: activeUser.password
+        });
+        tmpActiveUser.save(function (err) {
+            done(err);
+        });
+    });
+
+    it('should login active user', function (done) {
+        api.post('/login').send(activeUser).end(function (err, res) {
+            (res.text).should.not.contain('login');
+            done(err);
+        });
+    });
+
+    it('non-admin should not be able to use delete endpoint', function (done) {
+        api.post('/api/account/delete').send(tmpAdminUser).expect(401).end(function (err, res) {
+            done(err);
+        });
+    });
+
+    it('should log out of active user', function (done) {
+        api.get('/logout').end(function (err, res) {
+            (res.text).should.contain('Found. Redirecting to /');
+            done(err);
+        });
+    });
+
+    it('should login admin user', function (done) {
+        api.post('/login').send(tmpAdminUser).end(function (err, res) {
+            (res.text).should.not.contain('login');
+            done(err);
+        });
+    });
+
+    it('deactivates a user', function (done) {
+        api.post('/api/account/delete').send(activeUser).expect(200).end(function (err, res) {
+            done(err);
+        });
+    });
+
+    it('ensure that user has been deactivated', function (done) {
+        User.findOne({
+            email: activeUser.email
+        }, function (err, user) {
+            should.not.exist(user);
+            done(err);
+        });
+    });
+
+    it('should log out of admin user', function (done) {
+        api.get('/logout').end(function (err, res) {
+            (res.text).should.contain('Found. Redirecting to /');
+            done(err);
+        });
+    });
+
+    it('ensure deleted user cannot login', function (done) {
+        api.post('/login').send(activeUser).end(function (err, res) {
+            (res.text).should.contain('login');
+            done(err);
+        });
     });
 
 });
