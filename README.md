@@ -67,6 +67,14 @@ The button draws on the settings in the `app.json` file in this repository.
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 
+Docker Development
+------------------
+
+To develop locally using Docker, simply type `docker-compose up` to start a container
+instance of MongoDB alongside Ration. `api`, `config`, `lib`, `models`, `public`, and `views` are
+mounted as volumes, so you can edit any source files in these directories to modify the
+running version of Ration.
+
 Contributing
 ------------
 When contributing to Ration, please refer to the [git-flow](https://github.com/nvie/gitflow) branching model.

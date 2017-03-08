@@ -1,0 +1,20 @@
+version: "2"
+
+services:
+  web:
+    build: .
+    volumes:
+      - ./api:/app/api
+      - ./config:/app/config
+      - ./lib:/app/lib
+      - ./models:/app/models
+      - ./public:/app/public
+      - ./views:/app/views
+    links:
+      - mongodb
+    ports:
+      - "3000:3000"
+  mongodb:
+    image: mongo:3.2
+    ports:
+      - "27017:27017"
