@@ -437,3 +437,117 @@ exports.postForgot = function (req, res, next) {
         res.redirect('/forgot');
     });
 };
+
+//Export Admin assign, export admin revoke.
+//must be an admin to do this function.
+// FIXME doesn't need the admin check,
+// middleware will do this.
+exports.postAPIUpdateRoles = function (req, res, next) {
+
+    //Hard-coded for now.
+    var validRoles = ['admin'];
+    var userRoles = _.intersection(validRoles, req.body.roles);
+
+    if (!req.body.email) {
+        res.sendStatus(400);
+    } else {
+        //Find request user to check admin status.
+        User.findOne({
+            email: req.user.email.toLowerCase()
+        }, function (err, user) {
+            if (_.includes(user.roles, 'admin')) {
+                //Find user to update.
+                User.findOne({
+                    email: req.body.email.toLowerCase()
+                }, function (err, updateUser) {
+                    if (!updateUser) {
+                        res.sendStatus(404);
+                    } else {
+                        updateUser.roles = userRoles;
+                        updateUser.save(function (err) {
+                            res.sendStatus(200);
+                        });
+                    }
+                });
+            } else {
+                res.sendStatus(401);
+            }
+        });
+    }
+
+};
+
+exports.postDeactivateUser = function (req, res, next) {
+    User.findOne({
+        email: req.body.email.toLowerCase()
+    }, function (err, deactivateUser) {
+        if (!deactivateUser) {
+            res.sendStatus(404);
+        } else {
+            deactivateUser.inactive = true;
+            deactivateUser.save(function (err) {
+                if (req.user.email.toLowerCase() === req.body.email.toLowerCase()) {
+                    req.logout();
+                }
+                res.sendStatus(200);
+            });
+        }
+    });
+};
+
+//Add conditional logout.
+exports.postDeleteUser = function (req, res, next) {
+    User.findOne({
+        email: req.body.email.toLowerCase()
+    }, function (err, deleteUser) {
+        if (!deleteUser) {
+            res.sendStatus(404);
+        } else {
+            deleteUser.remove(function (err) {
+                if (req.user.email.toLowerCase() === req.body.email.toLowerCase()) {
+                    req.logout();
+                }
+                res.sendStatus(200);
+            });
+        }
+    });
+
+};
+
+//Not used by front end, but here for when we refactor (used in testing as well).
+exports.getAPIAccount = function (req, res) {
+
+    User.findOne({
+        email: req.user.email.toLowerCase()
+    }, function (err, user) {
+
+        var accountObject = {
+            email: user.email,
+            roles: user.roles
+        };
+
+        res.send(accountObject);
+
+    });
+
+};
+
+/**
+ * GET /account
+ * Profile page.
+ */
+exports.getUsers = function (req, res) {
+
+    User.find({
+        inactive: {
+            $ne: true
+        }
+    }, function (err, docs) {
+        res.render('users/users', {
+            title: 'User Management',
+            users: docs
+        });
+
+    });
+
+};

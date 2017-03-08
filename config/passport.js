@@ -23,6 +23,7 @@ passport.deserializeUser(function (id, done) {
 /**
  * Sign in using Email and Password.
  */
+
 passport.use(new LocalStrategy({
     usernameField: 'email'
 }, function (email, password, done) {
@@ -34,6 +35,13 @@ passport.use(new LocalStrategy({
                 msg: 'Email ' + email + ' not found.'
             });
         }
+
+        if (user.inactive) {
+            return done(null, false, {
+                msg: 'User ' + email + ' has been marked inactive.'
+            });
+        }
+
         user.comparePassword(password, function (err, isMatch) {
             if (isMatch) {
                 return done(null, user);
@@ -111,6 +119,12 @@ passport.use(new GoogleStrategy({
             google: profile.id
         }, function (err, existingUser) {
             if (existingUser) {
+                if (existingUser.inactive) {
+                    req.flash('errors', {
+                        msg: 'User ' + existingUser.email + ' has been marked inactive.'
+                    });
+                    return done(err);
+                }
                 return done(null, existingUser);
             }
             User.findOne({
@@ -159,7 +173,21 @@ exports.isAuthenticated = function (req, res, next) {
 };
 
 /**
- * Authorization Required middleware.
+ * Role Required middleware.
+ */
+exports.needsRole = function (role) {
+    return function (req, res, next) {
+        if (req.user) {
+            if (req.user.roles.indexOf(role) > -1) {
+                return next();
+            }
+        }
+        res.sendStatus(401);
+    }
+}
+
+/**
+ * Authorization Required middleware for tokens..
  */
 exports.isAuthorized = function (req, res, next) {
     var provider = req.path.split('/').slice(-1)[0];

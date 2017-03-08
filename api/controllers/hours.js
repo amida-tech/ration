@@ -6,7 +6,6 @@ var User = require('../../models/User');
 var Hours = require('../../models/Hours');
 var Projects = require('../../models/Projects');
 var weeksSinceEpoch = require('../../lib/util').weeksSinceEpoch;
-var ObjectId = require('mongodb').ObjectId;
 
 /**
  * GET /dashboard
@@ -24,37 +23,35 @@ exports.dashboard = function (req, res, next) {
         var allData = _.groupBy(docs, 'userId');
         var hours = [];
         _.forOwn(allData, function (value, key) {
-            var temp = {
-                id: key,
-                data: _.sortBy(value, 'week'),
-                projects: []
-            };
-            _.forEach(value, function (val) {
-                _.forEach(val.projects, function (project) {
-                    if (temp.projects.indexOf(project.name) < 0) {
-                        temp.projects.push(project.name);
-                    }
-                });
-            });
-            // check for inactive user, get userName
-            User.findOne({
-                _id: ObjectId(key)
-            }, function (err, doc) {
+            // look up related user to ensure they are active
+            User.findById(value[0].userId, function (err, user) {
                 if (err) {
                     return next(err);
+                } else if (user === null) {
+                    return;
+                } else if (user.inactive) {
+                    return;
                 }
-                temp.name = doc.profile.name;
-                if (doc.inactive != undefined && doc.inactive == true) {
-                    temp.inactive = true;
-                }
-                hours.push(temp);
-                if (hours.length === Object.keys(allData).length) {
-                    res.render('hours/dashboard', {
-                        title: 'Dashboard',
-                        hours: hours
+                var temp = {
+                    name: key,
+                    data: _.sortBy(value, 'week'),
+                    projects: []
+                };
+                _.forEach(value, function (val) {
+                    _.forEach(val.projects, function (project) {
+                        if (temp.projects.indexOf(project.name) < 0) {
+                            temp.projects.push(project.name);
+                        }
                     });
-                }
+                });
+                hours.push(temp);
             });
+            
+        });
+
+        res.render('hours/dashboard', {
+            title: 'Dashboard',
+            hours: hours
         });
     });
 };
@@ -127,7 +124,7 @@ exports.getHoursCurrentWeek = function (req, res, next) {
         }
         res.send(doc);
     });
-}
+};
 
 /**
  * GET /api/hours/me/week/:num
@@ -260,4 +257,41 @@ exports.putHours = function (req, res, next) {
             });
         }
     });
-}
+};
+
+/**
+ * PUT /api/hours/:userid/:week
+ * (ADMIN) Update the hours entry for a specific week for the specified user.
+ */
+exports.putHoursByUserByWeek = function (req, res, next) {
+    Hours.findOne({
+        userId: req.params.userid,
+        week: req.params.week
+    }, function (err, doc) {
+        if (err) {
+            return next(err);
+        }
+        if (!doc) {
+            doc = new Hours({
+                userId: req.user.id,
+                userName: req.user.profile.name,
+                week: req.params.week,
+                projects: req.body.hours
+            });
+            doc.save(function (err, doc) {
+                if (err) {
+                    return next(err);
+                }
+                res.send(doc);
+            });
+        } else {
+            doc.projects = req.body.hours;
+            doc.save(function (err, doc) {
+                if (err) {
+                    return next(err);
+                }
+                res.send(doc);
+            });
+        }
+    });
+};
