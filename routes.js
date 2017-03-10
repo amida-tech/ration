@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Controllers (route handlers).
  */
@@ -8,7 +10,6 @@ var projectController = require('./api/controllers/projects');
 /**
  * API keys and Passport configuration.
  */
-var passport = require('passport');
 var passportConfig = require('./config/passport');
 
 module.exports = function (app) {
@@ -28,11 +29,16 @@ module.exports = function (app) {
     app.post('/signup', userController.postSignup);
     app.get('/account', passportConfig.isAuthenticated, userController.getAccount);
     app.post('/account/profile', passportConfig.isAuthenticated, userController.postUpdateProfile);
-    app.post('/account/password', passportConfig.isAuthenticated, userController.postUpdatePassword);
-    app.post('/account/delete', passportConfig.isAuthenticated, userController.postDeleteAccount);
-    app.get('/account/unlink/:provider', passportConfig.isAuthenticated, userController.getOauthUnlink);
+    app.post('/account/password',
+        passportConfig.isAuthenticated, userController.postUpdatePassword);
+    app.post('/account/delete',
+        passportConfig.isAuthenticated, userController.postDeleteAccount);
+    app.get('/account/unlink/:provider',
+        passportConfig.isAuthenticated, userController.getOauthUnlink);
     app.get('/dashboard', passportConfig.isAuthenticated, hoursController.dashboard);
     app.get('/myhours', passportConfig.isAuthenticated, hoursController.myHours);
-    app.get('/projects', passportConfig.isAuthenticated, passportConfig.needsRole('admin'), projectController.projects);
-    app.get('/users', passportConfig.isAuthenticated, passportConfig.needsRole('admin'), userController.getUsers);
-}
+    app.get('/projects', passportConfig.isAuthenticated,
+        passportConfig.needsRole('admin'), projectController.projects);
+    app.get('/users', passportConfig.isAuthenticated,
+        passportConfig.needsRole('admin'), userController.getUsers);
+};

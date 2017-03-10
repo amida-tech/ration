@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Module dependencies.
  */
@@ -11,20 +13,16 @@ var lusca = require('lusca');
 var MongoStore = require('connect-mongo')(session);
 var flash = require('express-flash');
 var path = require('path');
-var mongoose = require('mongoose');
 var passport = require('passport');
 var expressValidator = require('express-validator');
 var sass = require('node-sass-middleware');
-var multer = require('multer');
-var upload = multer({
-    dest: path.join(__dirname, 'uploads')
-});
 
 module.exports = function (app) {
     /**
      * Load environment variables from .env file, where API keys and passwords are configured.
      *
-     * Default path: .env (You can remove the path argument entirely, after renaming `.env.example` to `.env`)
+     * Default path: .env
+     * (You can remove the path argument entirely, after renaming `.env.example` to `.env`)
      */
     if ((process.env.NODE_ENV || 'dev') === 'dev') {
         require('dotenv').load();
@@ -82,4 +80,4 @@ module.exports = function (app) {
      */
     app.use(errorHandler());
 
-}
+};

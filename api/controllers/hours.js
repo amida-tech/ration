@@ -1,7 +1,7 @@
+'use strict';
+
 var _ = require('lodash');
 var async = require('async');
-var mongoose = require('mongoose');
-var passport = require('passport');
 var User = require('../../models/User');
 var Hours = require('../../models/Hours');
 var Projects = require('../../models/Projects');
@@ -134,7 +134,7 @@ exports.getHoursCurrentWeek = function (req, res, next) {
  */
 exports.getHoursSpecificWeek = function (req, res, next) {
     if (req.params.num > weeksSinceEpoch()) {
-        return next(new Error("Cannot specify weeks in the future"));
+        return next(new Error('Cannot specify weeks in the future'));
     }
 
     Hours.findOne({
@@ -154,7 +154,7 @@ exports.getHoursSpecificWeek = function (req, res, next) {
  */
 exports.getHoursPastWeeks = function (req, res, next) {
     if (req.params.num < 1) {
-        return next(new Error("Must request at least one week of data"));
+        return next(new Error('Must request at least one week of data'));
     }
 
     Hours.find({
@@ -191,7 +191,7 @@ exports.getAllHoursCurrentWeek = function (req, res, next) {
  */
 exports.getAllHoursSpecificWeek = function (req, res, next) {
     if (req.params.num > weeksSinceEpoch()) {
-        return next(new Error("Cannot specify weeks in the future"));
+        return next(new Error('Cannot specify weeks in the future'));
     }
 
     Hours.find({
@@ -210,7 +210,7 @@ exports.getAllHoursSpecificWeek = function (req, res, next) {
  */
 exports.getAllHoursPastWeeks = function (req, res, next) {
     if (req.params.num < 1) {
-        return next(new Error("Must request at least one week of data"));
+        return next(new Error('Must request at least one week of data'));
     }
 
     Hours.find({

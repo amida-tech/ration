@@ -1,3 +1,5 @@
+'use strict';
+
 var mongoose = require('mongoose');
 
 // mirrored from util.js to avoid circular reference

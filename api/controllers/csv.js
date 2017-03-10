@@ -1,13 +1,13 @@
+'use strict';
+
 var _ = require('lodash');
-var async = require('async');
-var mongoose = require('mongoose');
 var Hours = require('../../models/Hours');
 var weeksSinceEpoch = require('../../lib/util').weeksSinceEpoch;
 
 /**
  * CSV download module
  */
-var csv = require('express-csv');
+require('express-csv');
 
 // mongoexport --db test --collection traffic --out traffic.json
 
@@ -18,7 +18,7 @@ var csv = require('express-csv');
  */
 exports.getAllHoursPastWeeksCSV = function (req, res, next) {
     if (req.params.num < 1) {
-        return next(new Error("Must request at least one week of data"));
+        return next(new Error('Must request at least one week of data'));
     }
 
     Hours.find({
@@ -49,4 +49,4 @@ exports.getAllHoursPastWeeksCSV = function (req, res, next) {
         res.set('Content-Disposition', 'attachment; filename="hours.csv"');
         res.csv(ret);
     });
-}
+};

@@ -1,11 +1,9 @@
+'use strict';
+
 var _ = require('lodash');
 var passport = require('passport');
-var request = require('request');
 var LocalStrategy = require('passport-local').Strategy;
 var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
-var OpenIDStrategy = require('passport-openid').Strategy;
-var OAuthStrategy = require('passport-oauth').OAuthStrategy;
-var OAuth2Strategy = require('passport-oauth').OAuth2Strategy;
 
 var User = require('../models/User');
 var Hours = require('../models/Hours');
@@ -92,7 +90,8 @@ passport.use(new GoogleStrategy({
         }, function (err, existingUser) {
             if (existingUser) {
                 req.flash('errors', {
-                    msg: 'There is already a Google account that belongs to you. Sign in with that account or delete it, then link it with your current account.'
+                    msg: 'There is already a Google account that belongs to you. Sign in' +
+                        'with that account or delete it, then link it with your current account.'
                 });
                 done(err);
             } else {
@@ -132,7 +131,8 @@ passport.use(new GoogleStrategy({
             }, function (err, existingEmailUser) {
                 if (existingEmailUser) {
                     req.flash('errors', {
-                        msg: 'There is already an account using this email address. Sign in to that account and link it with Google manually from Account Settings.'
+                        msg: 'There is already an account using this email address. Sign in to' +
+                            'that account and link it with Google manually from Account Settings.'
                     });
                     done(err);
                 } else {
@@ -183,8 +183,8 @@ exports.needsRole = function (role) {
             }
         }
         res.sendStatus(401);
-    }
-}
+    };
+};
 
 /**
  * Authorization Required middleware for tokens..
