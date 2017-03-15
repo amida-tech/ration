@@ -4,6 +4,15 @@ include ../mixins/week
 block content
   h2 
     span Reports
+    div.dropdown.pull-right
+      button.btn.btn-default.dropdown-toggle(type="button" id="reportSelect" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true")
+        span Select Report    
+        span.caret
+      ul.dropdown-menu(aria-labelledby="reportSelect")
+        li
+          a People by Projects
+        li
+          a Projects by People
   hr
   div.container
     div.content
