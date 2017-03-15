@@ -6,6 +6,7 @@
 var hoursController = require('./api/controllers/hours');
 var userController = require('./api/controllers/user');
 var projectController = require('./api/controllers/projects');
+var reportsController = require('./api/controllers/reports');
 
 /**
  * API keys and Passport configuration.
@@ -41,4 +42,5 @@ module.exports = function (app) {
         passportConfig.needsRole('admin'), projectController.projects);
     app.get('/users', passportConfig.isAuthenticated,
         passportConfig.needsRole('admin'), userController.getUsers);
+    app.get('/reports', passportConfig.isAuthenticated, reportsController.dashboard);
 };

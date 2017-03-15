@@ -1,0 +1,36 @@
+extends ../layout
+include ../mixins/week
+
+block content
+  h2 
+    span Hours Dashboard
+    a.btn.btn-success.pull-right#download_hours Download CSV
+  hr
+  div.container
+    div.content
+      each u in hours
+        h3= u.name
+        table.table.table-hover
+          thead
+            tr
+              th.col-md-3 Project
+              each week in u.data
+                +formatWeek(week.week)
+          tbody
+            each project in u.projects
+              tr
+                td.col-md-3= project
+                each week in u.data
+                  - var found = false
+                  each item in week.projects
+                    if item.name == project
+                      - found = true
+                      td.col-md-2= item.hours
+                  - if (!found)
+                    td.col-md-2= 0
+            tr
+              td.col-md-3
+                strong Total
+              each week in u.data
+                td.col-md-2
+                  strong= week.projects.reduce(function(total, project) { return total + project.hours; }, 0)
