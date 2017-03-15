@@ -4,7 +4,7 @@ var _ = require('lodash');
 var async = require('async');
 var User = require('../../models/User');
 var Hours = require('../../models/Hours');
-var Projects = require('../../models/Projects');
+//var Projects = require('../../models/Projects');
 var weeksSinceEpoch = require('../../lib/util').weeksSinceEpoch;
 
 /**
@@ -55,7 +55,7 @@ exports.dashboard = function (req, res, next) {
             });
         }, function (err) {
             if (err) return next(err);
-            res.render('hours/dashboard', {
+            res.render('reports/reports', {
                 title: 'Reports',
                 hours: hours
             });
