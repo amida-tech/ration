@@ -74,7 +74,8 @@ describe('CSV Controller:', function () {
     it('retrieve CSV with correct hours and percentages', function(done) {
         api.get('/api/csv/report').end(function(err, res) {
             console.log(res.text);
-            (res.text).should.contain('');
+            (res.text).should.contain('.33');
+            (res.text).should.contain('.67');
             done(err);
         });
     });
