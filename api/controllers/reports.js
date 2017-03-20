@@ -62,3 +62,51 @@ exports.dashboard = function (req, res, next) {
         });
     });
 };
+
+exports.byPerson = function (req, res, next) {
+    Hours.find({
+        week: {
+            $gte: weeksSinceEpoch()
+        }
+    }, function (err, docs) {
+        if (err) {
+            return next(err);
+        }
+        var allData = _.groupBy(docs, 'userName');
+        var hours = [];
+
+        async.eachOfSeries(allData, function (value, key, cb) {
+            // look up related user to ensure they are active
+            User.findById(value[0].userId, function (err, user) {
+                if (err) {
+                    return cb(err);
+                } else if (user === null) {
+                    return cb();
+                } else if (user.inactive) {
+                    return cb();
+                }
+                var temp = {
+                    name: key,
+                    data: _.sortBy(value, 'week'),
+                    projects: []
+                };
+                _.forEach(value, function (val) {
+                    _.forEach(val.projects, function (project) {
+                        if (temp.projects.indexOf(project.name) < 0) {
+                            temp.projects.push(project.name);
+                        }
+                    });
+                });
+                hours.push(temp);
+                cb();
+            });
+        }, function (err) {
+            if (err) return next(err);
+            res.render('reports/reports/byperson', {
+                title: 'Projects by Employee',
+                hours: hours
+            });
+        });
+    });
+
+};

@@ -43,4 +43,5 @@ module.exports = function (app) {
     app.get('/users', passportConfig.isAuthenticated,
         passportConfig.needsRole('admin'), userController.getUsers);
     app.get('/reports', passportConfig.isAuthenticated, reportsController.dashboard);
+    app.get('/reports/person', passportConfig.isAuthenticated, reportsController.byPerson);
 };

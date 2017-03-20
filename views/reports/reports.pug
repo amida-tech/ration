@@ -10,12 +10,13 @@ block content
         span.caret
       ul.dropdown-menu(aria-labelledby="reportSelect")
         li
-          a People by Projects
+          a Hours by Project
         li
-          a Projects by People
+          a(href="/reports/person") Hours By Person
   hr
   div.container
     div.content
-        include partials/projectsByPeople.pug
+      block report
+
     
     
