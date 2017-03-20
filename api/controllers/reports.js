@@ -110,3 +110,58 @@ exports.byPerson = function (req, res, next) {
     });
 
 };
+
+exports.byProject = function (req, res, next) {
+
+    Hours.find({
+        week: {
+            $gte: weeksSinceEpoch()
+        }
+    }, function (err, docs) {
+        if (err) {
+            return next(err);
+        }
+
+        //Restructure object by project totals.
+        function mapByProject(obj) {
+            var newArray = _.forEach(obj.projects, function (proj) {
+                proj.userId = obj.userId;
+                proj.week = obj.week;
+                return proj;
+            });
+            return newArray;
+
+        }
+
+        var mappedData = _.flatMap(docs, mapByProject);
+        var hours = [];
+
+        //Hours object is not storing the project id, so I have to take what is there.
+        async.eachOfSeries(mappedData, function (value, key, cb) {
+            User.findById(value.userId, function (err, user) {
+                if (err) {
+                    return cb(err);
+                } else if (user === null) {
+                    return cb();
+                } else if (user.inactive) {
+                    return cb();
+                }
+                //Append profile and email.
+                value.userProfile = user.profile;
+                value.userEmail = user.email;
+                hours.push(value);
+                cb();
+            });
+        }, function (err) {
+            if (err) return next(err);
+            //Group projects after member information appended.
+            var groupedData = _.groupBy(mappedData, 'name');
+            res.render('reports/reports/byperson', {
+                title: 'Projects by Employee',
+                hours: groupedData
+            });
+        });
+        //lean() returns pojo.
+    }).lean();
+
+};
