@@ -38,6 +38,8 @@ module.exports = function (app) {
 
     app.get('/api/csv/report',
     passportConfig.isAuthenticated, csvController.getReportPastWeekCSV);
+    app.get('/api/csv/project',
+    passportConfig.isAuthenticated, csvController.getProjectReportPastWeekCSV);
     app.get('/api/csv/:num',
     passportConfig.isAuthenticated, csvController.getAllHoursPastWeeksCSV);
 
