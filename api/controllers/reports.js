@@ -4,7 +4,6 @@ var _ = require('lodash');
 var async = require('async');
 var User = require('../../models/User');
 var Hours = require('../../models/Hours');
-//var Projects = require('../../models/Projects');
 var weeksSinceEpoch = require('../../lib/util').weeksSinceEpoch;
 
 /**
@@ -129,60 +128,23 @@ var formatHoursByProject = function (input) {
         outputData.push(tmpProjectObj);
 
     });
-    return outputData
+    return outputData;
 }
 
 /**
- * GET /dashboard
- * Hours dashboard.
+ * GET /reports
+ * Reports dashboard.
  */
-exports.dashboard = function (req, res, next) {
-    Hours.find({
-        week: {
-            $gte: weeksSinceEpoch() - 3
-        }
-    }, function (err, docs) {
-        if (err) {
-            return next(err);
-        }
-        var allData = _.groupBy(docs, 'userName');
-        var hours = [];
-
-        async.eachOfSeries(allData, function (value, key, cb) {
-            // look up related user to ensure they are active
-            User.findById(value[0].userId, function (err, user) {
-                if (err) {
-                    return cb(err);
-                } else if (user === null) {
-                    return cb();
-                } else if (user.inactive) {
-                    return cb();
-                }
-                var temp = {
-                    name: key,
-                    data: _.sortBy(value, 'week'),
-                    projects: []
-                };
-                _.forEach(value, function (val) {
-                    _.forEach(val.projects, function (project) {
-                        if (temp.projects.indexOf(project.name) < 0) {
-                            temp.projects.push(project.name);
-                        }
-                    });
-                });
-                hours.push(temp);
-                cb();
-            });
-        }, function (err) {
-            if (err) return next(err);
-            res.render('reports/reports', {
-                title: 'Reports',
-                hours: hours
-            });
-        });
+exports.reports = function (req, res, next) {
+    res.render('reports/reports', {
+        title: 'Reports'
     });
 };
 
+/**
+ * GET /reports/byperson
+ * Builds the reports by person.
+ */
 exports.byPerson = function (req, res, next) {
 
     getHours(0, function (err, docs) {
@@ -210,8 +172,6 @@ exports.byPerson = function (req, res, next) {
             });
         }, function (err) {
 
-            //console.log(JSON.stringify(hours, null, 10));
-
             if (err) return next(err);
             res.render('reports/reports/byperson', {
                 title: 'Hours by Person',
@@ -222,6 +182,10 @@ exports.byPerson = function (req, res, next) {
 
 };
 
+/**
+ * GET /reports/byproject
+ * Builds the reports by project.
+ */
 exports.byProject = function (req, res, next) {
 
     getHours(0, function (err, docs) {
