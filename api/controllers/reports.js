@@ -105,7 +105,7 @@ exports.byPerson = function (req, res, next) {
 
             if (err) return next(err);
             res.render('reports/reports/byperson', {
-                title: 'Projects by Employee',
+                title: 'Hours by People',
                 hours: hours
             });
         });
@@ -200,7 +200,7 @@ exports.byProject = function (req, res, next) {
             });
 
             res.render('reports/reports/byproject', {
-                title: 'Projects by Employee',
+                title: 'Hours by Project',
                 hours: outputData
             });
         });
