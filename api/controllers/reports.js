@@ -10,6 +10,7 @@ var weeksSinceEpoch = require('../../lib/util').weeksSinceEpoch;
 /**
  * Gets hours for an epoch window (optionally), and returns them in flat layout.
  */
+
 var getHours = function (epochSubtractor, callback) {
 
     //Mapping function, returns flat layout.
@@ -46,6 +47,7 @@ var getHours = function (epochSubtractor, callback) {
 /**
  * Takes flat layout and returns data in by person format.
  */
+
 var formatHoursByPerson = function (input) {
 
     var outputData = [];
@@ -79,9 +81,55 @@ var formatHoursByPerson = function (input) {
         tmpUserObj.projects = _.uniq(tmpUserObj.projects);
         outputData.push(tmpUserObj);
     });
-
     return outputData;
+}
 
+/**
+ * Takes flat layout and returns data in by project format.
+ */
+
+var formatHoursByProject = function (input) {
+
+    var outputData = [];
+    var groupedData = _.groupBy(input, 'name');
+    _.forEach(groupedData, function (value, key) {
+
+        var tmpProjectObj = {
+            name: key,
+            data: [],
+            people: []
+        };
+
+        var weeklyGroupings = _.groupBy(value, 'week');
+        var tmpArray = [];
+
+        _.forEach(weeklyGroupings, function (value, key) {
+            var tmpObj = {
+                week: key,
+                entries: value
+            };
+            tmpArray.push(tmpObj);
+
+            _.forEach(value, function (value) {
+
+                var tmpUser = {
+                    userId: value.userId,
+                    userEmail: value.userEmail,
+                    userProfile: value.userProfile
+                };
+
+                tmpProjectObj.people.push(tmpUser);
+
+            });
+
+        });
+
+        tmpProjectObj.data = tmpArray;
+        tmpProjectObj.people = _.uniqBy(tmpProjectObj.people, 'userId');
+        outputData.push(tmpProjectObj);
+
+    });
+    return outputData
 }
 
 /**
@@ -201,46 +249,7 @@ exports.byProject = function (req, res, next) {
         }, function (err) {
             if (err) return next(err);
 
-            //Rebuild the flattened entries, grouped by project and week.
-            var outputData = [];
-            var groupedData = _.groupBy(hours, 'name');
-            _.forEach(groupedData, function (value, key) {
-
-                var tmpProjectObj = {
-                    name: key,
-                    data: [],
-                    people: []
-                };
-
-                var weeklyGroupings = _.groupBy(value, 'week');
-                var tmpArray = [];
-
-                _.forEach(weeklyGroupings, function (value, key) {
-                    var tmpObj = {
-                        week: key,
-                        entries: value
-                    };
-                    tmpArray.push(tmpObj);
-
-                    _.forEach(value, function (value) {
-
-                        var tmpUser = {
-                            userId: value.userId,
-                            userEmail: value.userEmail,
-                            userProfile: value.userProfile
-                        };
-
-                        tmpProjectObj.people.push(tmpUser);
-
-                    });
-
-                });
-
-                tmpProjectObj.data = tmpArray;
-                tmpProjectObj.people = _.uniqBy(tmpProjectObj.people, 'userId');
-                outputData.push(tmpProjectObj);
-
-            });
+            var outputData = formatHoursByProject(hours);
 
             res.render('reports/reports/byproject', {
                 title: 'Hours by Project',
