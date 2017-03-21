@@ -44,6 +44,47 @@ var getHours = function (epochSubtractor, callback) {
 }
 
 /**
+ * Takes flat layout and returns data in by person format.
+ */
+var formatHoursByPerson = function (input) {
+
+    var outputData = [];
+    var groupedData = _.groupBy(input, 'userId');
+    _.forEach(groupedData, function (value, key) {
+
+        var tmpUserObj = {
+            userId: key,
+            data: [],
+            projects: []
+        };
+
+        var weeklyGroupings = _.groupBy(value, 'week');
+        var tmpArray = [];
+
+        _.forEach(weeklyGroupings, function (value, key) {
+
+            var tmpObj = {
+                week: key,
+                entries: value
+            };
+            tmpArray.push(tmpObj);
+
+            _.forEach(value, function (value) {
+                tmpUserObj.projects.push(value.name);
+            });
+
+        });
+
+        tmpUserObj.data = _.sortBy(tmpArray, 'week');
+        tmpUserObj.projects = _.uniq(tmpUserObj.projects);
+        outputData.push(tmpUserObj);
+    });
+
+    return outputData;
+
+}
+
+/**
  * GET /dashboard
  * Hours dashboard.
  */
@@ -99,41 +140,7 @@ exports.byPerson = function (req, res, next) {
     getHours(0, function (err, docs) {
         if (err) return next(err);
 
-        //Rebuild the flattened entries, grouped by user and week.
-        var outputData = [];
-        var groupedData = _.groupBy(docs, 'userId');
-        _.forEach(groupedData, function (value, key) {
-
-            var tmpUserObj = {
-                userId: key,
-                data: [],
-                projects: []
-            };
-
-            var weeklyGroupings = _.groupBy(value, 'week');
-            var tmpArray = [];
-
-            _.forEach(weeklyGroupings, function (value, key) {
-
-                var tmpObj = {
-                    week: key,
-                    entries: value
-                };
-                tmpArray.push(tmpObj);
-
-                _.forEach(value, function (value) {
-
-                    tmpUserObj.projects.push(value.name);
-
-                });
-
-            });
-
-            tmpUserObj.data = _.sortBy(tmpArray, 'week');
-            tmpUserObj.projects = _.uniq(tmpUserObj.projects);
-            outputData.push(tmpUserObj);
-        });
-
+        var outputData = formatHoursByPerson(docs);
         var hours = [];
 
         //Add user info.
