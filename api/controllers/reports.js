@@ -8,9 +8,40 @@ var Hours = require('../../models/Hours');
 var weeksSinceEpoch = require('../../lib/util').weeksSinceEpoch;
 
 /**
- * GET /report
- * Reportings dashboard.
+ * Gets hours for an epoch window (optionally), and returns them in flat layout.
  */
+var getHours = function (epochSubtractor, callback) {
+
+    //Mapping function, returns flat layout.
+    function mapByProject(obj) {
+        var newArray = _.forEach(obj.projects, function (proj) {
+            proj.userId = obj.userId;
+            proj.week = obj.week;
+            return proj;
+        });
+        return newArray;
+    }
+
+    if (!epochSubtractor) {
+        epochSubtractor = 0;
+    }
+
+    Hours.find({
+        week: {
+            $gte: weeksSinceEpoch() - epochSubtractor
+        }
+    }, function (err, docs) {
+        if (err) {
+            return callback(err);
+        }
+
+        //Flatten all entries.
+        var mappedData = _.flatMap(docs, mapByProject);
+        callback(null, mappedData);
+
+        //lean() returns pojo.
+    }).lean();
+}
 
 /**
  * GET /dashboard
@@ -115,31 +146,13 @@ exports.byPerson = function (req, res, next) {
 
 exports.byProject = function (req, res, next) {
 
-    Hours.find({
-        week: {
-            $gte: weeksSinceEpoch()
-        }
-    }, function (err, docs) {
-        if (err) {
-            return next(err);
-        }
-
-        function mapByProject(obj) {
-            var newArray = _.forEach(obj.projects, function (proj) {
-                proj.userId = obj.userId;
-                proj.week = obj.week;
-                return proj;
-            });
-            return newArray;
-        }
-
-        //Flatten all entries.
-        var mappedData = _.flatMap(docs, mapByProject);
+    getHours(0, function (err, docs) {
+        if (err) return next(err);
 
         var hours = [];
 
         //Hours object is not storing the project id, so I have to take what is there.
-        async.eachOfSeries(mappedData, function (value, key, cb) {
+        async.eachOfSeries(docs, function (value, key, cb) {
             User.findById(value.userId, function (err, user) {
                 if (err) {
                     return cb(err);
@@ -204,7 +217,6 @@ exports.byProject = function (req, res, next) {
                 hours: outputData
             });
         });
-        //lean() returns pojo.
-    }).lean();
+    });
 
 };
