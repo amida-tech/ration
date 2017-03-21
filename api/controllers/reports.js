@@ -179,7 +179,7 @@ exports.byProject = function (req, res, next) {
                     };
                     tmpArray.push(tmpObj);
 
-                    _.forEach(value, function (value, key) {
+                    _.forEach(value, function (value) {
 
                         var tmpUser = {
                             userId: value.userId,
