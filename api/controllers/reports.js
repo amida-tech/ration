@@ -73,6 +73,7 @@ exports.byPerson = function (req, res, next) {
             return next(err);
         }
         var allData = _.groupBy(docs, 'userName');
+
         var hours = [];
 
         async.eachOfSeries(allData, function (value, key, cb) {
@@ -101,6 +102,7 @@ exports.byPerson = function (req, res, next) {
                 cb();
             });
         }, function (err) {
+
             if (err) return next(err);
             res.render('reports/reports/byperson', {
                 title: 'Projects by Employee',
@@ -122,7 +124,6 @@ exports.byProject = function (req, res, next) {
             return next(err);
         }
 
-        //Restructure object by project totals.
         function mapByProject(obj) {
             var newArray = _.forEach(obj.projects, function (proj) {
                 proj.userId = obj.userId;
@@ -130,10 +131,11 @@ exports.byProject = function (req, res, next) {
                 return proj;
             });
             return newArray;
-
         }
 
+        //Flatten all entries.
         var mappedData = _.flatMap(docs, mapByProject);
+
         var hours = [];
 
         //Hours object is not storing the project id, so I have to take what is there.
@@ -146,6 +148,7 @@ exports.byProject = function (req, res, next) {
                 } else if (user.inactive) {
                     return cb();
                 }
+
                 //Append profile and email.
                 value.userProfile = user.profile;
                 value.userEmail = user.email;
@@ -154,11 +157,51 @@ exports.byProject = function (req, res, next) {
             });
         }, function (err) {
             if (err) return next(err);
-            //Group projects after member information appended.
-            var groupedData = _.groupBy(mappedData, 'name');
-            res.render('reports/reports/byperson', {
+
+            //Rebuild the flattened entries, grouped by project and week.
+            var outputData = [];
+            var groupedData = _.groupBy(hours, 'name');
+            _.forEach(groupedData, function (value, key) {
+
+                var tmpProjectObj = {
+                    name: key,
+                    data: [],
+                    people: []
+                };
+
+                var weeklyGroupings = _.groupBy(value, 'week');
+                var tmpArray = [];
+
+                _.forEach(weeklyGroupings, function (value, key) {
+                    var tmpObj = {
+                        week: key,
+                        entries: value
+                    };
+                    tmpArray.push(tmpObj);
+
+                    _.forEach(value, function (value, key) {
+
+                        var tmpUser = {
+                            userId: value.userId,
+                            userEmail: value.userEmail,
+                            userProfile: value.userProfile
+                        };
+
+                        tmpProjectObj.people.push(tmpUser);
+
+                    });
+
+                });
+
+                tmpProjectObj.data = tmpArray;
+                tmpProjectObj.people = _.uniqBy(tmpProjectObj.people, 'userId');
+                outputData.push(tmpProjectObj);
+
+            });
+
+            res.render('reports/reports/byproject', {
                 title: 'Projects by Employee',
-                hours: groupedData
+                hours: outputData
             });
         });
         //lean() returns pojo.
