@@ -95,21 +95,51 @@ exports.dashboard = function (req, res, next) {
 };
 
 exports.byPerson = function (req, res, next) {
-    Hours.find({
-        week: {
-            $gte: weeksSinceEpoch()
-        }
-    }, function (err, docs) {
-        if (err) {
-            return next(err);
-        }
-        var allData = _.groupBy(docs, 'userName');
+
+    getHours(0, function (err, docs) {
+        if (err) return next(err);
+
+        //Rebuild the flattened entries, grouped by user and week.
+        var outputData = [];
+        var groupedData = _.groupBy(docs, 'userId');
+        _.forEach(groupedData, function (value, key) {
+
+            var tmpUserObj = {
+                userId: key,
+                data: [],
+                projects: []
+            };
+
+            var weeklyGroupings = _.groupBy(value, 'week');
+            var tmpArray = [];
+
+            _.forEach(weeklyGroupings, function (value, key) {
+
+                var tmpObj = {
+                    week: key,
+                    entries: value
+                };
+                tmpArray.push(tmpObj);
+
+                _.forEach(value, function (value) {
+
+                    tmpUserObj.projects.push(value.name);
+
+                });
+
+            });
+
+            tmpUserObj.data = _.sortBy(tmpArray, 'week');
+            tmpUserObj.projects = _.uniq(tmpUserObj.projects);
+            outputData.push(tmpUserObj);
+        });
 
         var hours = [];
 
-        async.eachOfSeries(allData, function (value, key, cb) {
+        //Add user info.
+        async.eachOfSeries(outputData, function (value, key, cb) {
             // look up related user to ensure they are active
-            User.findById(value[0].userId, function (err, user) {
+            User.findById(value.userId, function (err, user) {
                 if (err) {
                     return cb(err);
                 } else if (user === null) {
@@ -117,26 +147,19 @@ exports.byPerson = function (req, res, next) {
                 } else if (user.inactive) {
                     return cb();
                 }
-                var temp = {
-                    name: key,
-                    data: _.sortBy(value, 'week'),
-                    projects: []
-                };
-                _.forEach(value, function (val) {
-                    _.forEach(val.projects, function (project) {
-                        if (temp.projects.indexOf(project.name) < 0) {
-                            temp.projects.push(project.name);
-                        }
-                    });
-                });
-                hours.push(temp);
+
+                value.userProfile = user.profile;
+                value.userEmail = user.email;
+                hours.push(value);
                 cb();
             });
         }, function (err) {
 
+            //console.log(JSON.stringify(hours, null, 10));
+
             if (err) return next(err);
             res.render('reports/reports/byperson', {
-                title: 'Hours by People',
+                title: 'Hours by Person',
                 hours: hours
             });
         });
