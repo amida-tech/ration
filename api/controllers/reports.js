@@ -147,13 +147,16 @@ exports.reports = function (req, res, next) {
  */
 exports.byPerson = function (req, res, next) {
 
+    // retrieve hours in flat layout.
     getHours(0, function (err, docs) {
         if (err) return next(err);
 
+        // reformat into report structure
         var outputData = formatHoursByPerson(docs);
+
         var hours = [];
 
-        //Add user info.
+        // add user info
         async.eachOfSeries(outputData, function (value, key, cb) {
             // look up related user to ensure they are active
             User.findById(value.userId, function (err, user) {
@@ -165,14 +168,15 @@ exports.byPerson = function (req, res, next) {
                     return cb();
                 }
 
+                // append profile and email
                 value.userProfile = user.profile;
                 value.userEmail = user.email;
                 hours.push(value);
                 cb();
             });
         }, function (err) {
-
             if (err) return next(err);
+
             res.render('reports/reports/byperson', {
                 title: 'Hours by Person',
                 hours: hours
@@ -188,13 +192,15 @@ exports.byPerson = function (req, res, next) {
  */
 exports.byProject = function (req, res, next) {
 
+    // retrieve hours in flat layout 
     getHours(0, function (err, docs) {
         if (err) return next(err);
 
         var hours = [];
 
-        //Hours object is not storing the project id, so I have to take what is there.
+        // add user info
         async.eachOfSeries(docs, function (value, key, cb) {
+            // look up related user to ensure they are active
             User.findById(value.userId, function (err, user) {
                 if (err) {
                     return cb(err);
@@ -204,7 +210,7 @@ exports.byProject = function (req, res, next) {
                     return cb();
                 }
 
-                //Append profile and email.
+                // append profile and email
                 value.userProfile = user.profile;
                 value.userEmail = user.email;
                 hours.push(value);
@@ -213,6 +219,7 @@ exports.byProject = function (req, res, next) {
         }, function (err) {
             if (err) return next(err);
 
+            // reformat into report structure
             var outputData = formatHoursByProject(hours);
 
             res.render('reports/reports/byproject', {
