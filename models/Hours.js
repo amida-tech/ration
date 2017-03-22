@@ -1,6 +1,7 @@
 'use strict';
 
 var mongoose = require('mongoose');
+var _ = require('lodash');
 
 // mirrored from util.js to avoid circular reference
 var weeksSinceEpoch = function () {
@@ -43,6 +44,34 @@ hoursSchema.pre('save', function (next) {
     }
     next();
 });
+
+/**
+ * Look up total hours by user for the current week
+ * cb - function(err, hoursDocs, totalHoursByUserObj)
+ */
+hoursSchema.statics.findWithTotalHours = function (cb) {
+    this.find({
+        week: {
+            $gte: weeksSinceEpoch() - 1
+        }
+    }, function (err, docs) {
+        if (err) return cb(err);
+
+        var totalHours = {};
+
+        _.forEach(docs, function (doc) {
+            _.forEach(doc.projects, function (project) {
+                if (totalHours.hasOwnProperty(doc.userId)) {
+                    totalHours[doc.userId] += project.hours;
+                } else {
+                    totalHours[doc.userId] = project.hours;
+                }
+            });
+        });
+
+        return cb(null, docs, totalHours);
+    });
+};
 
 var Hours = mongoose.model('Hours', hoursSchema);
 
