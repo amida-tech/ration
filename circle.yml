@@ -1,6 +1,7 @@
 dependencies:
     pre:
         - npm install -g npm
+        - npm install -g istanbul
 
 machine:
     node:
@@ -12,6 +13,14 @@ machine:
         GOOGLE_SECRET: xxxxx
         GOOGLE_DOMAIN: amida-tech.com
         GOOGLE_CALLBACK: /auth/google/callback
+
+general:
+  artifacts:
+    - ./coverage
+
+test:
+  post:
+    - bash <(curl -s https://codecov.io/bash)
 
 deployment:
     production:
