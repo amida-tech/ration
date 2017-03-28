@@ -2,7 +2,7 @@ extends ../reports.pug
 
 block report
     each u in hours
-        h3= u.name
+        h3= u.userProfile.name || u.userEmail || u.userId
         table.table.table-hover
           thead
             tr
