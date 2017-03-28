@@ -10,7 +10,21 @@ $(document).ready(function () {
         $('#project_select').find('option').text(function (i, el) {
             optionString = optionString + "<option>" + el + "</option>";
         })
-        $('#my_hours_table tr:last').after('<tr><td><select type="text" class="form-control">' + optionString + '</td><td><input type="text" class="form-control"></td></tr>');
+        $('#my_hours_table tbody:first').append('<tr><td><select type="text" class="form-control">' + optionString + '</td><td><input type="text" class="form-control"></td></tr>');
+    });
+
+    // Keep myhours total updates
+    $('#my_hours_table').on('change', 'input', function(){
+        var sum = 0;
+        // iterate through each td based on class and add the values
+        $('td input').each(function() {
+            var value = $(this).val();
+            // add only if the value is number
+            if(!isNaN(value) && value.length != 0) {
+                sum += parseFloat(value);
+            }
+        });
+        $('#total_hours').html(sum);
     });
 
     // Submit the projects list
