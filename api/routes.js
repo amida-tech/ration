@@ -36,6 +36,8 @@ module.exports = function (app) {
     app.put('/api/hours/:userid/:week', passportConfig.isAuthenticated,
     passportConfig.needsRole('admin'), hoursController.putHoursByUserByWeek);
 
+    app.get('/api/csv/report',
+    passportConfig.isAuthenticated, csvController.getReportPastWeekCSV);
     app.get('/api/csv/:num',
     passportConfig.isAuthenticated, csvController.getAllHoursPastWeeksCSV);
 

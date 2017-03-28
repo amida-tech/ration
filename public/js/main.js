@@ -65,7 +65,7 @@ $(document).ready(function () {
      */
     $("#download_hours").click(function (e) {
         e.preventDefault();
-        window.location = "/api/csv/1";
+        window.location = "/api/csv/report";
     });
 
 });
