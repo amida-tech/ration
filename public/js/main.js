@@ -14,7 +14,7 @@ $(document).ready(function () {
     });
 
     // Keep myhours total updates
-    $('#my_hours_table').on('change', 'input', function(){
+    var updateHours = function () {
         var sum = 0;
         // iterate through each td based on class and add the values
         $('td input').each(function() {
@@ -25,7 +25,10 @@ $(document).ready(function () {
             }
         });
         $('#total_hours').html(sum);
-    });
+    };
+    $('#my_hours_table').ready(updateHours);
+    $('#my_hours_table').on('change', 'input', updateHours);
+
 
     // Submit the projects list
     $("#post_hours").click(function () {
