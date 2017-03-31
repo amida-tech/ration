@@ -6,6 +6,9 @@ var User = require('../../models/User');
 var Hours = require('../../models/Hours');
 var weeksSinceEpoch = require('../../lib/util').weeksSinceEpoch;
 
+/**
+ * Takes flat layout and returns data in by project format.
+ */
 var formatHoursByPerson = function (input) {
 
     var outputData = [];
@@ -45,7 +48,6 @@ var formatHoursByPerson = function (input) {
 /**
  * Takes flat layout and returns data in by project format.
  */
-
 var formatHoursByProject = function (input) {
 
     var outputData = [];
@@ -136,7 +138,7 @@ exports.byPerson = function (req, res, next) {
         }, function (err) {
             if (err) return next(err);
 
-            res.render('reports/reports/byperson', {
+            res.render('reports/reports/person', {
                 title: 'Hours by Person',
                 hours: hours
             });
@@ -181,7 +183,7 @@ exports.byProject = function (req, res, next) {
             // reformat into report structure
             var outputData = formatHoursByProject(hours);
 
-            res.render('reports/reports/byproject', {
+            res.render('reports/reports/project', {
                 title: 'Hours by Project',
                 hours: outputData
             });
