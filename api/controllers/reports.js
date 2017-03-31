@@ -4,7 +4,6 @@ var _ = require('lodash');
 var async = require('async');
 var User = require('../../models/User');
 var Hours = require('../../models/Hours');
-var weeksSinceEpoch = require('../../lib/util').weeksSinceEpoch;
 
 /**
  * Takes flat layout and returns data in by project format.
@@ -43,7 +42,7 @@ var formatHoursByPerson = function (input) {
         outputData.push(tmpUserObj);
     });
     return outputData;
-}
+};
 
 /**
  * Takes flat layout and returns data in by project format.
@@ -90,13 +89,13 @@ var formatHoursByProject = function (input) {
 
     });
     return outputData;
-}
+};
 
 /**
  * GET /reports
  * Reports dashboard.
  */
-exports.reports = function (req, res, next) {
+exports.reports = function (req, res) {
     res.render('reports/reports', {
         title: 'Reports'
     });

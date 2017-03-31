@@ -46,8 +46,8 @@ hoursSchema.pre('save', function (next) {
 });
 
 /**
- * Gets flattened hours with just user, project, and allocation on same level.
- * Optionally define how many epochs back from the current epoch (week) you want to retrieve data for.
+ * Gets flattened hours with just user, project, and allocation on same level
+ * Optionally define how many epochs back from the current epoch (week) you want to retrieve
  * cb - function(err, flattenedData)
  */
 hoursSchema.statics.findFlattened = function (epochsBack, cb) {
@@ -67,7 +67,7 @@ hoursSchema.statics.findFlattened = function (epochsBack, cb) {
         epochsBack = 0;
     }
 
-    Hours.find({
+    this.find({
         week: {
             $gte: weeksSinceEpoch() - epochsBack
         }
