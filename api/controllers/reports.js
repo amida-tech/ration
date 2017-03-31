@@ -103,10 +103,10 @@ exports.reports = function (req, res, next) {
 };
 
 /**
- * GET /reports/byperson
+ * GET /reports/person
  * Builds the reports by person.
  */
-exports.byPerson = function (req, res, next) {
+exports.Person = function (req, res, next) {
 
     // retrieve hours in flat layout.
     Hours.findFlattened(0, function (err, docs) {
@@ -148,10 +148,10 @@ exports.byPerson = function (req, res, next) {
 };
 
 /**
- * GET /reports/byproject
+ * GET /reports/project
  * Builds the reports by project.
  */
-exports.byProject = function (req, res, next) {
+exports.Project = function (req, res, next) {
 
     // retrieve hours in flat layout 
     Hours.findFlattened(0, function (err, docs) {
