@@ -6,47 +6,6 @@ var User = require('../../models/User');
 var Hours = require('../../models/Hours');
 var weeksSinceEpoch = require('../../lib/util').weeksSinceEpoch;
 
-/**
- * Gets hours for an epoch window (optionally), and returns them in flat layout.
- */
-
-var getHours = function (epochSubtractor, callback) {
-
-    //Mapping function, returns flat layout.
-    function mapByProject(obj) {
-        var newArray = _.forEach(obj.projects, function (proj) {
-            proj.userId = obj.userId;
-            proj.week = obj.week;
-            return proj;
-        });
-        return newArray;
-    }
-
-    if (!epochSubtractor) {
-        epochSubtractor = 0;
-    }
-
-    Hours.find({
-        week: {
-            $gte: weeksSinceEpoch() - epochSubtractor
-        }
-    }, function (err, docs) {
-        if (err) {
-            return callback(err);
-        }
-
-        //Flatten all entries.
-        var mappedData = _.flatMap(docs, mapByProject);
-        callback(null, mappedData);
-
-        //lean() returns pojo.
-    }).lean();
-}
-
-/**
- * Takes flat layout and returns data in by person format.
- */
-
 var formatHoursByPerson = function (input) {
 
     var outputData = [];
@@ -148,7 +107,7 @@ exports.reports = function (req, res, next) {
 exports.byPerson = function (req, res, next) {
 
     // retrieve hours in flat layout.
-    getHours(0, function (err, docs) {
+    Hours.findFlattened(0, function (err, docs) {
         if (err) return next(err);
 
         // reformat into report structure
@@ -193,7 +152,7 @@ exports.byPerson = function (req, res, next) {
 exports.byProject = function (req, res, next) {
 
     // retrieve hours in flat layout 
-    getHours(0, function (err, docs) {
+    Hours.findFlattened(0, function (err, docs) {
         if (err) return next(err);
 
         var hours = [];
