@@ -100,7 +100,7 @@ exports.getAllHoursPastWeeksCSV = function (req, res, next) {
             });
         });
 
-        res.set('Content-Disposition', 'attachment; filename="hours.csv"');
+        res.set('Content-Disposition', 'attachment; filename="person.csv"');
         res.csv(ret);
     });
 };
