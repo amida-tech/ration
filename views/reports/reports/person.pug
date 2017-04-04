@@ -1,0 +1,29 @@
+extends ../reports.pug
+
+block report
+    each u in hours
+        h3= u.userProfile.name || u.userEmail || u.userId
+        table.table.table-hover
+          thead
+            tr
+              th.col-md-3 Project
+              each week in u.data
+                +formatWeek(week.week)
+          tbody
+            each project in u.projects
+              tr
+                td.col-md-3= project
+                each week in u.data
+                  - var found = false
+                  each item in week.entries
+                    if item.name == project
+                      - found = true
+                      td.col-md-2= item.hours
+                  - if (!found)
+                    td.col-md-2= 0
+            tr
+              td.col-md-3
+                strong Total
+              each week in u.data
+                td.col-md-2
+                  strong= week.entries.reduce(function(total, entry) { return total + entry.hours; }, 0)
