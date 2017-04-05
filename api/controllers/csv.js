@@ -3,6 +3,7 @@
 var _ = require('lodash');
 var Hours = require('../../models/Hours');
 var weeksSinceEpoch = require('../../lib/util').weeksSinceEpoch;
+var dateFromEpoch = require('../../lib/util').dateFromEpoch;
 
 /**
  * CSV download module
@@ -10,33 +11,15 @@ var weeksSinceEpoch = require('../../lib/util').weeksSinceEpoch;
 require('express-csv');
 
 exports.getReportPastWeekCSV = function (req, res, next) {
-    Hours.find({
-        week: {
-            $gte: weeksSinceEpoch() - 1
-        }
-    }, function (err, docs) {
+    Hours.findWithTotalHours(function(err, docs, totalHours) {
         if (err) return next(err);
 
         var ret = [];
-        var totalHours = {};
 
-        // first pass: get total hours for each user
+        // record data and calculate percentages
         _.forEach(docs, function (doc) {
             _.forEach(doc.projects, function (project) {
-                if (totalHours.hasOwnProperty(doc.userId)) {
-                    totalHours[doc.userId] += project.hours;
-                } else {
-                    totalHours[doc.userId] = project.hours;
-                }
-            });
-        });
-
-        // second pass: record data and calculate percentages
-        _.forEach(docs, function (doc) {
-            _.forEach(doc.projects, function (project) {
-                var days = (doc.week * 7) + 4;
-                var epochTime = days * 8.64e7;
-                var date = new Date(epochTime).toISOString().slice(0, 10);
+                var date = dateFromEpoch(doc.week);
                 ret.push([
                     doc.userName,
                     date,
@@ -48,6 +31,38 @@ exports.getReportPastWeekCSV = function (req, res, next) {
         });
 
         res.set('Content-Disposition', 'attachment; filename="report.csv"');
+        res.csv(ret);
+    });
+};
+
+exports.getProjectReportPastWeekCSV = function (req, res, next) {
+    Hours.findWithTotalHours(function(err, docs, totalHours) {
+        if (err) return next(err);
+
+        var ret = [];
+
+        // record data and calculate percentages
+        _.forEach(docs, function (doc) {
+            _.forEach(doc.projects, function (project) {
+                var date = dateFromEpoch(doc.week);
+                ret.push([
+                    project.name,
+                    doc.userName,
+                    date,
+                    project.hours,
+                    (project.hours/totalHours[doc.userId]).toFixed(2)
+                ]);
+            });
+        });
+
+        // sort by project name
+        ret.sort((function(i) {
+            return function(a, b) {
+                return (a[i] === b[i] ? 0 : (a[i] < b[i] ? -1 : 1));
+            };
+        })(0));
+
+        res.set('Content-Disposition', 'attachment; filename="project.csv"');
         res.csv(ret);
     });
 };
@@ -85,7 +100,7 @@ exports.getAllHoursPastWeeksCSV = function (req, res, next) {
             });
         });
 
-        res.set('Content-Disposition', 'attachment; filename="hours.csv"');
+        res.set('Content-Disposition', 'attachment; filename="person.csv"');
         res.csv(ret);
     });
 };

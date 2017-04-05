@@ -85,4 +85,8 @@ $(document).ready(function () {
         window.location = "/api/csv/report";
     });
 
+    $("#download_project_hours").click(function (e) {
+        e.preventDefault();
+        window.location = "/api/csv/project";
+    });
 });
