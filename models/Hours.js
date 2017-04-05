@@ -71,8 +71,9 @@ hoursSchema.statics.findWithTotalHours = function (cb) {
 
         return cb(null, docs, totalHours);
     });
+}
 
- /**
+/**
  * Gets flattened hours with just user, project, and allocation on same level
  * Optionally define how many epochs back from the current epoch (week) you want to retrieve
  * cb - function(err, flattenedData)
