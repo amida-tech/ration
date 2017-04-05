@@ -71,6 +71,44 @@ hoursSchema.statics.findWithTotalHours = function (cb) {
 
         return cb(null, docs, totalHours);
     });
+
+ /**
+ * Gets flattened hours with just user, project, and allocation on same level
+ * Optionally define how many epochs back from the current epoch (week) you want to retrieve
+ * cb - function(err, flattenedData)
+ */
+hoursSchema.statics.findFlattened = function (epochsBack, cb) {
+
+    //Mapping function, returns flat layout.
+    function mapByProject(obj) {
+        var newArray = _.forEach(obj.projects, function (proj) {
+            proj.userId = obj.userId;
+            proj.week = obj.week;
+            return proj;
+        });
+        return newArray;
+    }
+
+    //If there isn't a set number of epochs back asked for, default to zero (current epoch).
+    if (!epochsBack) {
+        epochsBack = 0;
+    }
+
+    this.find({
+        week: {
+            $gte: weeksSinceEpoch() - epochsBack
+        }
+    }, function (err, docs) {
+        if (err) {
+            return cb(err);
+        }
+
+        //Flatten all entries.
+        var mappedData = _.flatMap(docs, mapByProject);
+        cb(null, mappedData);
+
+        //lean() returns pojo so you can append information to the returned object.
+    }).lean();
 };
 
 var Hours = mongoose.model('Hours', hoursSchema);

@@ -162,7 +162,7 @@ exports.postUpdateProfile = function (req, res, next) {
                 if (err.code === 11000) {
                     req.flash('errors', {
                         msg: 'The email address you have entered is already' +
-                        'associated with an account.'
+                            'associated with an account.'
                     });
                     return res.redirect('/account');
                 } else {
@@ -341,7 +341,7 @@ exports.postReset = function (req, res, next) {
                 from: 'hackathon@starter.com',
                 subject: 'Your Hackathon Starter password has been changed',
                 text: 'Hello,\n\n' +
-                    'This is a confirmation that the password for your account ' + 
+                    'This is a confirmation that the password for your account ' +
                     user.email + ' has just been changed.\n'
             };
             transporter.sendMail(mailOptions, function (err) {
@@ -422,7 +422,7 @@ exports.postForgot = function (req, res, next) {
                 to: user.email,
                 from: 'hackathon@starter.com',
                 subject: 'Reset your password on Hackathon Starter',
-                text: 'You are receiving this email because you (or someone else)' + 
+                text: 'You are receiving this email because you (or someone else)' +
                     'have requested the reset of the password for your account.\n\n' +
                     'Please click on the following link, or paste this into your browser' +
                     'to complete the process:\n\n' +
@@ -447,8 +447,6 @@ exports.postForgot = function (req, res, next) {
 
 //Export Admin assign, export admin revoke.
 //must be an admin to do this function.
-// FIXME doesn't need the admin check,
-// middleware will do this.
 exports.postAPIUpdateRoles = function (req, res, next) {
 
     //Hard-coded for now.
@@ -458,29 +456,20 @@ exports.postAPIUpdateRoles = function (req, res, next) {
     if (!req.body.email) {
         res.sendStatus(400);
     } else {
-        //Find request user to check admin status.
         User.findOne({
-            email: req.user.email.toLowerCase()
-        }, function (err, user) {
-            if (_.includes(user.roles, 'admin')) {
-                //Find user to update.
-                User.findOne({
-                    email: req.body.email.toLowerCase()
-                }, function (err, updateUser) {
-                    if (!updateUser) {
-                        res.sendStatus(404);
-                    } else {
-                        updateUser.roles = userRoles;
-                        updateUser.save(function (err) {
-                            if (err) return next(err);
-                            res.sendStatus(200);
-                        });
-                    }
-                });
+            email: req.body.email.toLowerCase()
+        }, function (err, updateUser) {
+            if (!updateUser) {
+                res.sendStatus(404);
             } else {
-                res.sendStatus(401);
+                updateUser.roles = userRoles;
+                updateUser.save(function (err) {
+                    if (err) return next(err);
+                    res.sendStatus(200);
+                });
             }
         });
+
     }
 
 };

@@ -1,0 +1,23 @@
+extends ../layout
+include ../mixins/week
+
+block content
+  h2
+    span= title
+    div.dropdown.pull-right
+      button.btn.btn-default.dropdown-toggle(type="button" id="reportSelect" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true")
+        span Select Report    
+        span.caret
+      ul.dropdown-menu(aria-labelledby="reportSelect")
+        li
+          a(href="/reports/project") Hours by Project
+        li
+          a(href="/reports/person") Hours By Person
+  hr
+  div.container
+    div.content
+      block report
+        strong Use the 'Select Report' button above to view a report.
+
+    
+    
