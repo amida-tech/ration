@@ -1,13 +1,14 @@
 {
     "name": "ration",
-    "version": "0.4.1",
+    "version": "0.5.0",
     "repository": {
         "type": "git",
         "url": "https://github.com/amida-tech/ration.git"
     },
     "scripts": {
         "start": "node app.js",
-        "test": "mocha --reporter spec --timeout 5000 --recursive"
+        "test": "mocha --reporter spec --timeout 5000 --recursive",
+        "coverage": "istanbul cover `npm bin`/_mocha -- -R spec --recursive"
     },
     "dependencies": {
         "async": "^2.0.0-rc.3",

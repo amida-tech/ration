@@ -10,8 +10,25 @@ $(document).ready(function () {
         $('#project_select').find('option').text(function (i, el) {
             optionString = optionString + "<option>" + el + "</option>";
         })
-        $('#my_hours_table tr:last').after('<tr><td><select type="text" class="form-control">' + optionString + '</td><td><input type="text" class="form-control"></td></tr>');
+        $('#my_hours_table tbody:first').append('<tr><td><select type="text" class="form-control">' + optionString + '</td><td><input type="text" class="form-control"></td></tr>');
     });
+
+    // Keep myhours total updates
+    var updateHours = function () {
+        var sum = 0;
+        // iterate through each td based on class and add the values
+        $('td input').each(function() {
+            var value = $(this).val();
+            // add only if the value is number
+            if(!isNaN(value) && value.length != 0) {
+                sum += parseFloat(value);
+            }
+        });
+        $('#total_hours').html(sum);
+    };
+    $('#my_hours_table').ready(updateHours);
+    $('#my_hours_table').on('change', 'input', updateHours);
+
 
     // Submit the projects list
     $("#post_hours").click(function () {
@@ -65,7 +82,11 @@ $(document).ready(function () {
      */
     $("#download_hours").click(function (e) {
         e.preventDefault();
-        window.location = "/api/csv/1";
+        window.location = "/api/csv/report";
     });
 
+    $("#download_project_hours").click(function (e) {
+        e.preventDefault();
+        window.location = "/api/csv/project";
+    });
 });

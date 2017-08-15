@@ -1,15 +1,71 @@
+'use strict';
+
 var _ = require('lodash');
-var async = require('async');
-var mongoose = require('mongoose');
 var Hours = require('../../models/Hours');
 var weeksSinceEpoch = require('../../lib/util').weeksSinceEpoch;
+var dateFromEpoch = require('../../lib/util').dateFromEpoch;
 
 /**
  * CSV download module
  */
-var csv = require('express-csv');
+require('express-csv');
 
-// mongoexport --db test --collection traffic --out traffic.json
+exports.getReportPastWeekCSV = function (req, res, next) {
+    Hours.findWithTotalHours(function(err, docs, totalHours) {
+        if (err) return next(err);
+
+        var ret = [];
+
+        // record data and calculate percentages
+        _.forEach(docs, function (doc) {
+            _.forEach(doc.projects, function (project) {
+                var date = dateFromEpoch(doc.week);
+                ret.push([
+                    doc.userName,
+                    date,
+                    project.name,
+                    project.hours,
+                    (project.hours/totalHours[doc.userId]).toFixed(2)
+                ]);
+            });
+        });
+
+        res.set('Content-Disposition', 'attachment; filename="report.csv"');
+        res.csv(ret);
+    });
+};
+
+exports.getProjectReportPastWeekCSV = function (req, res, next) {
+    Hours.findWithTotalHours(function(err, docs, totalHours) {
+        if (err) return next(err);
+
+        var ret = [];
+
+        // record data and calculate percentages
+        _.forEach(docs, function (doc) {
+            _.forEach(doc.projects, function (project) {
+                var date = dateFromEpoch(doc.week);
+                ret.push([
+                    project.name,
+                    doc.userName,
+                    date,
+                    project.hours,
+                    (project.hours/totalHours[doc.userId]).toFixed(2)
+                ]);
+            });
+        });
+
+        // sort by project name
+        ret.sort((function(i) {
+            return function(a, b) {
+                return (a[i] === b[i] ? 0 : (a[i] < b[i] ? -1 : 1));
+            };
+        })(0));
+
+        res.set('Content-Disposition', 'attachment; filename="project.csv"');
+        res.csv(ret);
+    });
+};
 
 /**
  * GET /api/csv/:num
@@ -18,7 +74,7 @@ var csv = require('express-csv');
  */
 exports.getAllHoursPastWeeksCSV = function (req, res, next) {
     if (req.params.num < 1) {
-        return next(new Error("Must request at least one week of data"));
+        return next(new Error('Must request at least one week of data'));
     }
 
     Hours.find({
@@ -26,9 +82,7 @@ exports.getAllHoursPastWeeksCSV = function (req, res, next) {
             $gte: weeksSinceEpoch() - req.params.num
         }
     }, function (err, docs) {
-        if (err) {
-            return next(err);
-        }
+        if (err) return next(err);
 
         var ret = [];
 
@@ -46,7 +100,7 @@ exports.getAllHoursPastWeeksCSV = function (req, res, next) {
             });
         });
 
-        res.set('Content-Disposition', 'attachment; filename="hours.csv"');
+        res.set('Content-Disposition', 'attachment; filename="person.csv"');
         res.csv(ret);
     });
-}
+};
