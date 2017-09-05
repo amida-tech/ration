@@ -17,7 +17,7 @@ var hoursSchema = new mongoose.Schema({
     week: Number,
     projects: [{
         name: String,
-        hours: mongoose.Schema.Types.Decimal
+        hours: Number
     }]
 });
 
