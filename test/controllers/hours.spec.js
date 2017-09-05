@@ -17,12 +17,12 @@ const tmpAdminUser = {
 
 const hours1 = [{
     name: 'test1',
-    hours: 10
+    hours: 10.0
 }];
 
 const hours2 = [{
     name: 'test2',
-    hours: 20
+    hours: 20.0
 }];
 
 //Remove users and hours and establish root admin user.

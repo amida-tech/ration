@@ -20,7 +20,7 @@ describe('Hours Model', function() {
       userId: 'user123',
       project: [{
           name: 'knitting',
-          hours: 40
+          hours: 40.0
       }]
     });
     hours.save(function(err) {
@@ -34,7 +34,7 @@ describe('Hours Model', function() {
       userId: 'user456',
       project: [{
           name: 'knitting',
-          hours: 40
+          hours: 40.0
       }]
     });
     hours.save(function(err, doc) {
@@ -49,7 +49,7 @@ describe('Hours Model', function() {
       userId: 'user123',
       project: [{
           name: 'knitting',
-          hours: 40
+          hours: 40.0
       }]
     });
     hours.save(function(err) {
