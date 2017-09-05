@@ -1,10 +1,10 @@
+'use strict';
+
 /**
  * Module dependencies.
  */
 var express = require('express');
 var mongoose = require('mongoose');
-
-var archiveHours = require('./lib/util').archiveHours;
 
 /**
  * Create Express server.

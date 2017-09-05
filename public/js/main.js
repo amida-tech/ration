@@ -10,8 +10,25 @@ $(document).ready(function () {
         $('#project_select').find('option').text(function (i, el) {
             optionString = optionString + "<option>" + el + "</option>";
         })
-        $('#my_hours_table tr:last').after('<tr><td><select type="text" class="form-control">' + optionString + '</td><td><input type="text" class="form-control"></td></tr>');
+        $('#my_hours_table tbody:first').append('<tr><td><select type="text" class="form-control">' + optionString + '</td><td><input type="text" class="form-control"></td></tr>');
     });
+
+    // Keep myhours total updates
+    var updateHours = function () {
+        var sum = 0;
+        // iterate through each td based on class and add the values
+        $('td input').each(function() {
+            var value = $(this).val();
+            // add only if the value is number
+            if(!isNaN(value) && value.length != 0) {
+                sum += parseFloat(value);
+            }
+        });
+        $('#total_hours').html(sum);
+    };
+    $('#my_hours_table').ready(updateHours);
+    $('#my_hours_table').on('change', 'input', updateHours);
+
 
     // Submit the projects list
     $("#post_hours").click(function () {
@@ -29,13 +46,13 @@ $(document).ready(function () {
                 // check if a project name already exists
                 // in the case of a duplicate project name we only take the first
                 var result = [];
-                
+
                 if (hoursData.length > 0) {
                     result = hoursData.filter(function (data) {
                         return data.name === project;
                     });
                 }
-                
+
                 if (result.length === 0) {
                     hoursData.push({
                         name: project,
@@ -65,49 +82,11 @@ $(document).ready(function () {
      */
     $("#download_hours").click(function (e) {
         e.preventDefault();
-        window.location = "/api/csv/1";
+        window.location = "/api/csv/report";
     });
 
-    /**
-     * Functions for Project List
-     */
-
-    //Add a line to the table.
-    $("#add_project").click(function (e) {
-        $('#projects_table tr:last').after('<tr><td><input type="text" class="form-control"></td></tr>');
+    $("#download_project_hours").click(function (e) {
+        e.preventDefault();
+        window.location = "/api/csv/project";
     });
-
-    // Submit the projects list
-    $("#save_projects").click(function () {
-        var url = window.location;
-        var hostname = $('<a>').prop('href', url).prop('hostname');
-        var projectData = [];
-
-        $('#projects_table > tbody').find('tr').each(function (i, el) {
-            var $tds = $(this).find('td');
-
-            var project = $tds.eq(0).find('input').val();
-
-            if (project) {
-                projectData.push({
-                    name: project
-                });
-            }
-        });
-
-        $.ajax({
-            type: 'PUT',
-            url: '/api/projects',
-            data: {
-                projects: projectData
-            },
-
-            success: function (data, status) {
-                window.location.href = '/dashboard';
-            }
-        });
-
-        event.preventDefault();
-    });
-
 });

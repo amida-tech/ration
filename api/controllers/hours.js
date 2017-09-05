@@ -1,7 +1,7 @@
+'use strict';
+
 var _ = require('lodash');
 var async = require('async');
-var mongoose = require('mongoose');
-var passport = require('passport');
 var User = require('../../models/User');
 var Hours = require('../../models/Hours');
 var Projects = require('../../models/Projects');
@@ -22,32 +22,41 @@ exports.dashboard = function (req, res, next) {
         }
         var allData = _.groupBy(docs, 'userName');
         var hours = [];
-        _.forOwn(allData, function (value, key) {
-            var temp = {
-                name: key,
-                data: _.sortBy(value, 'week'),
-                projects: []
-            };
-            _.forEach(value, function (val) {
-                _.forEach(val.projects, function (project) {
-                    if (temp.projects.indexOf(project.name) < 0) {
-                        temp.projects.push(project.name);
-                    }
+
+        async.eachOfSeries(allData, function(value, key, cb){
+            // look up related user to ensure they are active
+            User.findById(value[0].userId, function (err, user) {
+                if (err) {
+                    return cb(err);
+                } else if (user === null) {
+                    return cb();
+                } else if (user.inactive) {
+                    return cb();
+                }
+                var temp = {
+                    name: key,
+                    data: _.sortBy(value, 'week'),
+                    projects: []
+                };
+                _.forEach(value, function (val) {
+                    _.forEach(val.projects, function (project) {
+                        if (temp.projects.indexOf(project.name) < 0) {
+                            temp.projects.push(project.name);
+                        }
+                    });
                 });
+                hours.push(temp);
+                cb();
             });
-            hours.push(temp);
-        });
-
-        // sort the hours by user name
-        hours.sort(function (a, b) {
-            if (a.name < b.name) return -1;
-            if (a.name > b.name) return 1;
-            return 0;
-        });
-
-        res.render('hours/dashboard', {
-            title: 'Dashboard',
-            hours: hours
+        }, function(err) {
+            if (err) return next(err);
+            hours.sort(function(a,b) {
+                return (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0);
+            });
+            res.render('hours/dashboard', {
+                title: 'Dashboard',
+                hours: hours
+            });
         });
     });
 };
@@ -120,7 +129,7 @@ exports.getHoursCurrentWeek = function (req, res, next) {
         }
         res.send(doc);
     });
-}
+};
 
 /**
  * GET /api/hours/me/week/:num
@@ -128,7 +137,7 @@ exports.getHoursCurrentWeek = function (req, res, next) {
  */
 exports.getHoursSpecificWeek = function (req, res, next) {
     if (req.params.num > weeksSinceEpoch()) {
-        return next(new Error("Cannot specify weeks in the future"));
+        return next(new Error('Cannot specify weeks in the future'));
     }
 
     Hours.findOne({
@@ -148,7 +157,7 @@ exports.getHoursSpecificWeek = function (req, res, next) {
  */
 exports.getHoursPastWeeks = function (req, res, next) {
     if (req.params.num < 1) {
-        return next(new Error("Must request at least one week of data"));
+        return next(new Error('Must request at least one week of data'));
     }
 
     Hours.find({
@@ -185,7 +194,7 @@ exports.getAllHoursCurrentWeek = function (req, res, next) {
  */
 exports.getAllHoursSpecificWeek = function (req, res, next) {
     if (req.params.num > weeksSinceEpoch()) {
-        return next(new Error("Cannot specify weeks in the future"));
+        return next(new Error('Cannot specify weeks in the future'));
     }
 
     Hours.find({
@@ -204,7 +213,7 @@ exports.getAllHoursSpecificWeek = function (req, res, next) {
  */
 exports.getAllHoursPastWeeks = function (req, res, next) {
     if (req.params.num < 1) {
-        return next(new Error("Must request at least one week of data"));
+        return next(new Error('Must request at least one week of data'));
     }
 
     Hours.find({
@@ -253,4 +262,41 @@ exports.putHours = function (req, res, next) {
             });
         }
     });
-}
+};
+
+/**
+ * PUT /api/hours/:userid/:week
+ * (ADMIN) Update the hours entry for a specific week for the specified user.
+ */
+exports.putHoursByUserByWeek = function (req, res, next) {
+    Hours.findOne({
+        userId: req.params.userid,
+        week: req.params.week
+    }, function (err, doc) {
+        if (err) {
+            return next(err);
+        }
+        if (!doc) {
+            doc = new Hours({
+                userId: req.user.id,
+                userName: req.user.profile.name,
+                week: req.params.week,
+                projects: req.body.hours
+            });
+            doc.save(function (err, doc) {
+                if (err) {
+                    return next(err);
+                }
+                res.send(doc);
+            });
+        } else {
+            doc.projects = req.body.hours;
+            doc.save(function (err, doc) {
+                if (err) {
+                    return next(err);
+                }
+                res.send(doc);
+            });
+        }
+    });
+};

@@ -15,6 +15,8 @@
           a(href='/dashboard') Dashboard
         li(class=(title == 'My Hours') ? 'active' : undefined)
           a(href='/myhours') My Hours
+        li(class=(title == 'Reports') ? 'active' : undefined)
+          a(href='/reports') Reports
       ul.nav.navbar-nav.navbar-right
         if (!user)
           li(class=(title == 'Login') ? 'active' : undefined)
@@ -33,6 +35,11 @@
             ul.dropdown-menu
               li
                 a(href='/account') My Account
+              if user.roles.indexOf('admin') > -1
+                li.divider
+                li
+                  a(href='/projects') Edit Projects
+                  a(href='/users') Edit Users
               li.divider
               li
                 a(href='/logout') Logout

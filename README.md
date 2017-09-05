@@ -1,7 +1,7 @@
 # Ration 
 [![Dependency Status](https://david-dm.org/amida-tech/ration/status.svg?style=flat)](https://david-dm.org/amida-tech/ration)
 [![Build Status](https://circleci.com/gh/amida-tech/ration.png?style=shield&circle-token=903c4db5360a4ad7fd73acb866dfdc990d22fc63)](https://circleci.com/gh/amida-tech/ration)
-[![Stories in Ready](https://badge.waffle.io/amida-tech/ration.png?label=ready&title=Ready)](https://waffle.io/amida-tech/ration)
+[![Codecov](https://img.shields.io/codecov/c/github/amida-tech/ration.svg)](https://codecov.io/gh/amida-tech/ration)
 
 Ration is a tool for managing workload within your organization. Users can login using your organization's Gmail domain, then set their total weekly hours on a per-project basis.
 These hours are visible to all users in a dashboard.
@@ -67,6 +67,14 @@ The button draws on the settings in the `app.json` file in this repository.
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 
+Docker Development
+------------------
+
+To develop locally using Docker, simply type `docker-compose up` to start a container
+instance of MongoDB alongside Ration. `api`, `config`, `lib`, `models`, `public`, and `views` are
+mounted as volumes, so you can edit any source files in these directories to modify the
+running version of Ration.
+
 Contributing
 ------------
 When contributing to Ration, please refer to the [git-flow](https://github.com/nvie/gitflow) branching model.
@@ -80,7 +88,7 @@ License
 
 The MIT License (MIT)
 
-Copyright (c) 2016 Jacob Sachs
+Copyright (c) 2016 Amida Technology Solutions
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 

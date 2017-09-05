@@ -1,3 +1,5 @@
+'use strict';
+
 var _ = require('lodash');
 var async = require('async');
 var crypto = require('crypto');
@@ -159,7 +161,8 @@ exports.postUpdateProfile = function (req, res, next) {
             if (err) {
                 if (err.code === 11000) {
                     req.flash('errors', {
-                        msg: 'The email address you have entered is already associated with an account.'
+                        msg: 'The email address you have entered is already' +
+                            'associated with an account.'
                     });
                     return res.redirect('/account');
                 } else {
@@ -338,7 +341,8 @@ exports.postReset = function (req, res, next) {
                 from: 'hackathon@starter.com',
                 subject: 'Your Hackathon Starter password has been changed',
                 text: 'Hello,\n\n' +
-                    'This is a confirmation that the password for your account ' + user.email + ' has just been changed.\n'
+                    'This is a confirmation that the password for your account ' +
+                    user.email + ' has just been changed.\n'
             };
             transporter.sendMail(mailOptions, function (err) {
                 req.flash('success', {
@@ -418,10 +422,13 @@ exports.postForgot = function (req, res, next) {
                 to: user.email,
                 from: 'hackathon@starter.com',
                 subject: 'Reset your password on Hackathon Starter',
-                text: 'You are receiving this email because you (or someone else) have requested the reset of the password for your account.\n\n' +
-                    'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
+                text: 'You are receiving this email because you (or someone else)' +
+                    'have requested the reset of the password for your account.\n\n' +
+                    'Please click on the following link, or paste this into your browser' +
+                    'to complete the process:\n\n' +
                     'http://' + req.headers.host + '/reset/' + token + '\n\n' +
-                    'If you did not request this, please ignore this email and your password will remain unchanged.\n'
+                    'If you did not request this, please ignore this email and' +
+                    'your password will remain unchanged.\n'
             };
             transporter.sendMail(mailOptions, function (err) {
                 req.flash('info', {
@@ -436,4 +443,110 @@ exports.postForgot = function (req, res, next) {
         }
         res.redirect('/forgot');
     });
+};
+
+//Export Admin assign, export admin revoke.
+//must be an admin to do this function.
+exports.postAPIUpdateRoles = function (req, res, next) {
+
+    //Hard-coded for now.
+    var validRoles = ['admin'];
+    var userRoles = _.intersection(validRoles, req.body.roles);
+
+    if (!req.body.email) {
+        res.sendStatus(400);
+    } else {
+        User.findOne({
+            email: req.body.email.toLowerCase()
+        }, function (err, updateUser) {
+            if (!updateUser) {
+                res.sendStatus(404);
+            } else {
+                updateUser.roles = userRoles;
+                updateUser.save(function (err) {
+                    if (err) return next(err);
+                    res.sendStatus(200);
+                });
+            }
+        });
+
+    }
+
+};
+
+exports.postDeactivateUser = function (req, res, next) {
+    User.findOne({
+        email: req.body.email.toLowerCase()
+    }, function (err, deactivateUser) {
+        if (!deactivateUser) {
+            res.sendStatus(404);
+        } else {
+            deactivateUser.inactive = true;
+            deactivateUser.save(function (err) {
+                if (err) return next(err);
+                if (req.user.email.toLowerCase() === req.body.email.toLowerCase()) {
+                    req.logout();
+                }
+                res.sendStatus(200);
+            });
+        }
+    });
+};
+
+//Add conditional logout.
+exports.postDeleteUser = function (req, res, next) {
+    User.findOne({
+        email: req.body.email.toLowerCase()
+    }, function (err, deleteUser) {
+        if (!deleteUser) {
+            res.sendStatus(404);
+        } else {
+            deleteUser.remove(function (err) {
+                if (err) return next(err);
+                if (req.user.email.toLowerCase() === req.body.email.toLowerCase()) {
+                    req.logout();
+                }
+                res.sendStatus(200);
+            });
+        }
+    });
+
+};
+
+//Not used by front end, but here for when we refactor (used in testing as well).
+exports.getAPIAccount = function (req, res) {
+
+    User.findOne({
+        email: req.user.email.toLowerCase()
+    }, function (err, user) {
+
+        var accountObject = {
+            email: user.email,
+            roles: user.roles
+        };
+
+        res.send(accountObject);
+
+    });
+
+};
+
+/**
+ * GET /account
+ * Profile page.
+ */
+exports.getUsers = function (req, res) {
+
+    User.find({
+        inactive: {
+            $ne: true
+        }
+    }, function (err, docs) {
+        res.render('users/users', {
+            title: 'User Management',
+            users: docs
+        });
+
+    });
+
 };
