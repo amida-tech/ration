@@ -5,7 +5,7 @@ dependencies:
 
 machine:
     node:
-        version: 5.0.0
+        version: 6.11.2
     environment:
         MONGODB: mongodb://localhost:27017/ration-test
         SESSION_SECRET: Your Session Secret goes here
